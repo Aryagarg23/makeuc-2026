@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import math
-from collections import defaultdict
+from collections import defaultdict, deque
 from dataclasses import dataclass
 from typing import Iterable, Iterator
 
@@ -79,6 +79,7 @@ class Observation:
     bytes: int
     packets: int
     features: tuple[float, ...]
+    window_s: float = 10.0  # features 0, 1 and 5 depend on window length; prototypes only compare at equal length
 
 
 def features(pkts: list[Packet], servers: set[str], window_s: float) -> tuple[float, ...]:
@@ -109,43 +110,72 @@ def features(pkts: list[Packet], servers: set[str], window_s: float) -> tuple[fl
     )
 
 
-def windows(packets: Iterable[Packet], window_s: float = 10.0) -> Iterator[list[Observation]]:
-    """Tumbling windows. Yields the observations for each window once it closes.
+def windows(
+    packets: Iterable[Packet], window_s: float = 10.0, step_s: float | None = None
+) -> Iterator[list[Observation]]:
+    """Windows [k*step_s, k*step_s + window_s). step_s=None means tumbling (step = window).
 
-    Packets must arrive in non-decreasing ts order (tshark live output does).
+    Yields the observations of each non-empty window once a later packet closes it, then the
+    windows still open at end of input. Packets must arrive in non-decreasing ts order (tshark
+    live output does). A packet is attributed to a service when it arrives, using names learned
+    up to then.
     """
+    step = window_s if step_s is None else step_s
+    if not 0 < step <= window_s:
+        raise ValueError("need 0 < step_s <= window_s")
     hosts = HostMap()
-    current: int | None = None
-    groups: dict[tuple[str, str], list[Packet]] = defaultdict(list)
-    servers: dict[tuple[str, str], set[str]] = defaultdict(set)
+    buf: deque[tuple[Packet, tuple[str, str], str]] = deque()
+    k: int | None = None  # earliest window not yet emitted
 
-    def flush(idx: int) -> list[Observation]:
-        out = []
-        for (service, server), pkts in sorted(groups.items()):
-            out.append(
-                Observation(
-                    window_start=idx * window_s,
-                    service=service,
-                    server=server,
-                    bytes=sum(p.length for p in pkts),
-                    packets=len(pkts),
-                    features=features(pkts, servers[(service, server)], window_s),
-                )
+    def first_window(ts: float) -> int:
+        return math.floor((ts - window_s) / step) + 1
+
+    def emit(idx: int) -> list[Observation]:
+        lo, hi = idx * step, idx * step + window_s
+        groups: dict[tuple[str, str], list[Packet]] = defaultdict(list)
+        servers: dict[tuple[str, str], set[str]] = defaultdict(set)
+        for p, key, server in buf:
+            if lo <= p.ts < hi:
+                groups[key].append(p)
+                servers[key].add(server)
+        return [
+            Observation(
+                window_start=lo,
+                service=service,
+                server=server,
+                bytes=sum(p.length for p in pkts),
+                packets=len(pkts),
+                features=features(pkts, servers[(service, server)], window_s),
+                window_s=window_s,
             )
-        groups.clear()
-        servers.clear()
-        return out
+            for (service, server), pkts in sorted(groups.items())
+        ]
+
+    def advance() -> None:
+        nonlocal k
+        k += 1
+        while buf and buf[0][0].ts < k * step:
+            buf.popleft()
+        if buf:
+            k = max(k, first_window(buf[0][0].ts))
 
     for p in packets:
         hosts.learn(p)
-        idx = int(p.ts // window_s)
-        if current is not None and idx != current:
-            yield flush(current)
-        current = idx
+        if k is None:
+            k = first_window(p.ts)
+        while k * step + window_s <= p.ts:
+            out = emit(k)
+            if out:
+                yield out
+            advance()
+            if not buf:
+                k = first_window(p.ts)
         server, host = hosts.server_and_host(p)
         service = service_of(host) if host else UNKNOWN
         key = (service, server if service == UNKNOWN else "")
-        groups[key].append(p)
-        servers[key].add(server)
-    if current is not None and groups:
-        yield flush(current)
+        buf.append((p, key, server))
+    while buf:
+        out = emit(k)
+        if out:
+            yield out
+        advance()

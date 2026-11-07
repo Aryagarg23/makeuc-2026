@@ -2,7 +2,10 @@
 
   enroll BUCKET CAPTURE.tsv --weight W     one-shot: add/replace a bucket from one labelled capture
   classify CAPTURE.tsv                     dry run over a saved capture, one line per window
-  live [--esp32 PORT]                      read tshark lines on stdin, stimulate per window
+  live [--esp32 PORT]                      read tshark lines on stdin, stimulate on confirmed windows
+
+Windows are --window s long and slide every --step s. A stimulus needs --confirm consecutive
+steps agreeing on a bucket (gvs_pipeline/trigger.py).
 """
 from __future__ import annotations
 
@@ -15,6 +18,7 @@ from typing import Iterable, TextIO
 from . import classify as C
 from .flows import windows
 from .packets import Packet, parse_line
+from .trigger import Trigger
 
 
 def _packets(lines: Iterable[str]) -> Iterable[Packet]:
@@ -26,7 +30,7 @@ def _packets(lines: Iterable[str]) -> Iterable[Packet]:
 
 def cmd_enroll(a: argparse.Namespace) -> int:
     with open(a.capture) as fh:
-        obs = [o for w in windows(_packets(fh), a.window) for o in w]
+        obs = [o for w in windows(_packets(fh), a.window, a.step) for o in w]
     b = C.enroll(a.bucket, a.weight, obs)
     buckets = [x for x in C.load(a.store) if x.name != b.name] + [b]
     C.save(buckets, a.store)
@@ -37,14 +41,20 @@ def cmd_enroll(a: argparse.Namespace) -> int:
 
 def _run(lines: Iterable[str], a: argparse.Namespace, out: TextIO, esp=None) -> None:
     buckets = C.load(a.store)
-    for obs in windows(_packets(lines), a.window):
+    stale = sorted({b.name for b in buckets if b.window_s != a.window})
+    if stale:
+        raise SystemExit(f"buckets {stale} were enrolled at a different --window; re-enroll at {a.window} s")
+    trig = Trigger(a.step, a.confirm)
+    for obs in windows(_packets(lines), a.window, a.step):
+        t = obs[0].window_start
         best = C.strongest(C.classify(o, buckets) for o in obs)
-        rec: dict = {"window": obs[0].window_start if obs else None, "services": len(obs)}
+        fired = trig.update(t, best)
+        rec: dict = {"window": t, "services": len(obs), "fired": fired is not None}
         if best is not None:
             ms = C.duration_ms(best.intensity)
             rec.update(bucket=best.bucket, service=best.obs.service, via=best.via,
                        confidence=round(best.confidence, 3), intensity=round(best.intensity, 3), ms=ms)
-            if esp is not None:
+            if fired is not None and esp is not None:
                 rec["esp32"] = esp.stim(best.bucket, best.intensity, ms)
         out.write(json.dumps(rec) + "\n")
         out.flush()
@@ -75,7 +85,9 @@ def cmd_live(a: argparse.Namespace) -> int:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="gvs_pipeline")
     ap.add_argument("--store", type=Path, default=Path("prototypes.json"))
-    ap.add_argument("--window", type=float, default=10.0)
+    ap.add_argument("--window", type=float, default=3.0, help="window length, s")
+    ap.add_argument("--step", type=float, default=1.0, help="window slide, s")
+    ap.add_argument("--confirm", type=int, default=2, help="consecutive agreeing steps before a stimulus")
     sub = ap.add_subparsers(dest="cmd", required=True)
     e = sub.add_parser("enroll")
     e.add_argument("bucket")

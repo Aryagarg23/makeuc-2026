@@ -114,8 +114,12 @@ def test_dns_answers_name_flows_without_sni():
     assert by_server == {"100.100.100.100": UNKNOWN, "named": "youtube.com"}
 
 
-@given(ipv4, ipv4, st.integers(1024, 65535))
+internet_ipv4 = ipv4.filter(lambda ip: not (ip.startswith("100.") and 64 <= int(ip.split(".")[1]) <= 127))
+
+
+@given(internet_ipv4, ipv4, st.integers(1024, 65535))
 def test_unnamed_download_keyed_by_remote_not_client(a, b, port):
+    # Portless packets between two tailnet IPs are genuinely ambiguous (falls back to dst), so `a` is off-tailnet.
     # Reason: keying unnamed flows by the client IP would merge every unnamed download into one blob.
     assert unnamed_server(Packet(0.0, a, CLIENT, 1400)) == a
     assert unnamed_server(Packet(0.0, CLIENT, b, 100, sport=port, dport=443)) == b
@@ -177,7 +181,7 @@ def test_unnamed_flow_falls_back_to_shape():
     assert all(d.intensity < buckets[0].weight for d in ds)
 
 
-@given(st.integers(1, C.MIN_BYTES - 1))
+@given(st.integers(1, int(C.min_bytes(10.0)) - 1))
 def test_small_windows_never_stimulated(nbytes):
     # Reason: a background keepalive to an enrolled domain is not exposure.
     buckets = enrolled()
