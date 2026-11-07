@@ -30,6 +30,10 @@ ssh unoq ./capture.sh | python -m gvs_pipeline live --esp32 /dev/cu.usbmodem1101
 - Buckets remember the window length they were enrolled at. Classifying at a different `--window` is refused, because three of the six features scale with window length.
 - The ESP32 enforces its own caps regardless: arming, 5 s cooldown, 30 per hour, max duty (`esp32/README.md`).
 
+## TRIBE weight cap
+
+`enroll ... --tribe CLIP.tribe.json --tribe-anchors NEUTRAL.tribe.json HIGH.tribe.json` sets the weight to `min(--weight, drive)`. Here `drive` is TRIBE's predicted cortical drive for the bucket's screen recording, placed between two anchor clips (`gvs_pipeline/tribe.py`, `../tribe/README.md`). It can lower the weight you chose, never raise it.
+
 ## Reels vs DMs (same app)
 
 Enroll both, with weight 0 on the one you don't want punished:
@@ -53,7 +57,7 @@ python3 -m venv .venv && .venv/bin/pip install pyserial pytest hypothesis
 
 ## Not done
 
-- TRIBE v2 is not wired in. It takes video, audio and text. The exit node sees encrypted packets, so it gets hostnames and flow shape, not content.
+- TRIBE v2 is used only at enrollment, on screen recordings. It isn't in the live loop: the exit node sees encrypted packets, and TRIBE runs slower than real time.
 - Not run against real tailnet traffic yet. Every test uses synthetic flows, including the Instagram ones. Real Instagram may share one QUIC connection between API and media, prefetch reels while you're in DMs, or open DM videos that look like reels. Only real exemplar captures will show whether the shapes separate.
 - Not run on the UNO Q yet.
 - The ESP32 link uses serial only. The firmware's HTTP endpoint is unauthenticated and untested.

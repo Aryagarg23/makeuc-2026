@@ -44,6 +44,7 @@ class Bucket:
     shape: tuple[float, ...] = (0.0,) * N_FEATURES
     domain_shapes: dict[str, tuple[float, ...]] = field(default_factory=dict)
     window_s: float = 10.0  # window length the exemplar was summarised at
+    tribe_drive: float | None = None  # TRIBE drive in [0, 1] that capped the weight, if used
 
 
 @dataclass(frozen=True)
@@ -163,6 +164,7 @@ def save(buckets: list[Bucket], path: Path) -> None:
             "shape": list(b.shape),
             "domain_shapes": {d: list(s) for d, s in sorted(b.domain_shapes.items())},
             "window_s": b.window_s,
+            "tribe_drive": b.tribe_drive,
         }
         for b in buckets
     }
@@ -181,6 +183,7 @@ def load(path: Path) -> list[Bucket]:
             shape=tuple(v["shape"]),
             domain_shapes={d: tuple(s) for d, s in v.get("domain_shapes", {}).items()},
             window_s=v.get("window_s", 10.0),  # stores written before this field were all 10 s
+            tribe_drive=v.get("tribe_drive"),
         )
         for n, v in raw.items()
     ]

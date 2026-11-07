@@ -1,6 +1,8 @@
 """CLI.
 
   enroll BUCKET CAPTURE.tsv --weight W     one-shot: add/replace a bucket from one labelled capture
+      [--tribe CLIP.tribe.json --tribe-anchors NEUTRAL.tribe.json HIGH.tribe.json]
+                                           cap W by TRIBE's predicted drive for the screen recording
   classify CAPTURE.tsv                     dry run over a saved capture, one line per window
   live [--esp32 PORT]                      read tshark lines on stdin, stimulate on confirmed windows
 
@@ -31,10 +33,21 @@ def _packets(lines: Iterable[str]) -> Iterable[Packet]:
 def cmd_enroll(a: argparse.Namespace) -> int:
     with open(a.capture) as fh:
         obs = [o for w in windows(_packets(fh), a.window, a.step) for o in w]
-    b = C.enroll(a.bucket, a.weight, obs)
+    weight, drive = a.weight, None
+    if a.tribe or a.tribe_anchors:
+        if not (a.tribe and a.tribe_anchors):
+            raise SystemExit("--tribe and --tribe-anchors go together")
+        from . import tribe as T
+
+        s, n, h = T.load_score(a.tribe), *(T.load_score(p) for p in a.tribe_anchors)
+        drive = T.drive(s, n, h)
+        weight = T.capped_weight(a.weight, s, n, h)
+    b = C.enroll(a.bucket, weight, obs)
+    b.tribe_drive = drive
     buckets = [x for x in C.load(a.store) if x.name != b.name] + [b]
     C.save(buckets, a.store)
-    print(json.dumps({"bucket": b.name, "weight": b.weight, "domains": sorted(b.domains),
+    print(json.dumps({"bucket": b.name, "weight": b.weight, "user_weight": a.weight, "tribe_drive": drive,
+                      "domains": sorted(b.domains),
                       "shape": [round(x, 3) for x in b.shape]}))
     return 0
 
@@ -93,6 +106,8 @@ def main(argv: list[str] | None = None) -> int:
     e.add_argument("bucket")
     e.add_argument("capture")
     e.add_argument("--weight", type=float, required=True)
+    e.add_argument("--tribe", type=Path, help="tribe/score_clip.py output for this bucket's screen recording")
+    e.add_argument("--tribe-anchors", type=Path, nargs=2, metavar=("NEUTRAL", "HIGH"))
     e.set_defaults(fn=cmd_enroll)
     c = sub.add_parser("classify")
     c.add_argument("capture")
