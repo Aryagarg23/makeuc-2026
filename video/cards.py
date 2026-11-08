@@ -186,7 +186,9 @@ def stamp(im: Image.Image, style: str) -> Image.Image:
 
 
 def render(c: dict, dst: Path) -> Path:
-    stamp(KINDS[c["type"]](c), c.get("style", "clean" if c["type"] in ("citations", "results", "image", "software_map") else "dedsec")).save(dst)
+    style = c.get("style", "clean" if c["type"] in ("citations", "results", "image", "software_map") else "dedsec")
+    im = KINDS[c["type"]](c)
+    (stamp(im, style) if c.get("mark", True) else im).save(dst)  # "mark": false leaves the creator mark off
     return dst
 
 

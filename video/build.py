@@ -3,7 +3,7 @@
   .venv/bin/python build.py edl.json out/pitch.mp4
 
 edl.json = {"music": {"file": "clips/falle.mp3", "gain": 0.3, "start": 0, "fade_out": 3},   (optional bed,
-            ducked under voice and clip audio)
+            ducked under voice and clip audio; "until": N ends the bed where segment N starts)
             "segments": [ ... ]}, each segment is either a clip or a card:
   {"src": "clips/scroll.mp4", "in": 2.0, "out": 8.5,
    "look": "kids"|"dedsec"|"clean"|"cyber", "eyes": true,
@@ -13,7 +13,9 @@ edl.json = {"music": {"file": "clips/falle.mp3", "gain": 0.3, "start": 0, "fade_
    "pins": [{"from": s, "to": s, "rect": [x, y, w, h]}],   (cyber: face search region, fractions of the picture)
    "nofaces": [{"from": s, "to": s}],                       (cyber: detection off, e.g. wide shots)
    "titles": [{"from": s, "to": s, "title": "...", "sub": "..."}],   (cyber: lower-third title, top left)
-Top level also takes "tag" (creator tag, default "+- II") and "logo" (path to a PNG, top right).
+   "names": [{"from": s, "to": s, "side": ..., "name": "..."}],   (cyber: face tag by shot, as moods)
+Top level also takes "tag" (creator tag text, default "+- II"; null for none) and "logo" (path to a PNG,
+bottom right); a clip segment with "logo": false leaves the logo off.
    "audio": "orig"|"mute"|"meme"|"echo"|"meme+echo",
    "vo": {"file": "vo/scene2.wav"} | {"tts": "words", "speaker": "Zarvox"}, "vo_gain": 1.0, "bed_gain": 0.35,
    "note": "free text, ignored"}
@@ -73,7 +75,8 @@ def render_segment(seg: dict, i: int, work: Path) -> Path:
         fx.look((HERE / seg["src"]).resolve(), base, look, seg.get("eyes", False), seg.get("in"), seg.get("out"),
                 "orig" if audio == "mute" else audio, crop=seg.get("crop"), subs=seg.get("subs"),
                 moods=seg.get("moods"), hud=seg.get("hud"), pins=seg.get("pins"),
-                nofaces=seg.get("nofaces"), titles=seg.get("titles"), tag=edl_tag, logo=edl_logo)
+                nofaces=seg.get("nofaces"), titles=seg.get("titles"), tag=edl_tag,
+                logo=edl_logo if seg.get("logo", True) else None, names=seg.get("names"))
         if audio == "mute":
             muted = work / f"muted{i:02d}.mp4"
             subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(base), "-c:v", "copy",
@@ -115,6 +118,8 @@ def main(edl_path: str, out_path: str) -> int:
     if music:
         # music bed under everything, ducked (sidechain) whenever the programme has voice or clip audio
         total = dur(joined)
+        if music.get("until") is not None:  # the bed ends (faded out) where segment `until` starts
+            total = sum(dur(p) for p in parts[:music["until"]])
         g, fade = music.get("gain", 0.3), music.get("fade_out", 3.0)
         subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(joined),
                         "-ss", str(music.get("start", 0)), "-i", str((HERE / music["file"]).resolve()),

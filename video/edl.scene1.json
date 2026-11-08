@@ -1,5 +1,5 @@
 {
-  "tag": "+- II",
+  "tag": null,
   "music": {
     "file": "clips/falle.mp3",
     "gain": 0.3,
@@ -19,6 +19,18 @@
       "look": "dedsec"
     },
     {
+      "note": "context card",
+      "dur": 3.5,
+      "look": "dedsec",
+      "card": {
+        "type": "headline",
+        "style": "dedsec",
+        "text": "After the settlement, Meta's president took questions on stage at the All-In Summit",
+        "source": "All-In Summit 2026  //  clip via @scrolling2death",
+        "mark": false
+      }
+    },
+    {
       "src": "clips/powell_cspan.mp4",
       "look": "cyber",
       "crop": [
@@ -36,10 +48,10 @@
       "audio": "orig",
       "titles": [
         {
-          "from": 10.9,
-          "to": 14.6,
-          "title": "Meta President Dina Powell McCormick",
-          "sub": "ALL-IN SUMMIT 2026  //  via @scrolling2death"
+          "from": 1.4,
+          "to": 5.4,
+          "title": "The interviewer asks about the settlement",
+          "sub": "ALL-IN SUMMIT 2026  //  ON STAGE"
         }
       ],
       "moods": [
@@ -190,7 +202,7 @@
         },
         {
           "from": 88.5,
-          "to": 92.5,
+          "to": 92.533,
           "side": "any",
           "words": [
             "DISMISSIVE",
@@ -198,7 +210,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "side": "any",
           "words": [
@@ -338,7 +350,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "rect": [
             0.38,
@@ -489,7 +501,70 @@
       ],
       "note": "settlement question",
       "in": 1.4,
-      "out": 8.1
+      "out": 8.1,
+      "logo": false,
+      "names": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 15.2,
+          "to": 17.333,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 17.333,
+          "to": 20.967,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 23.4,
+          "to": 26.667,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 88.5,
+          "to": 92.533,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 92.533,
+          "to": 96.7,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 116.8,
+          "to": 120.64,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        }
+      ]
     },
     {
       "src": "clips/powell_cspan.mp4",
@@ -663,7 +738,7 @@
         },
         {
           "from": 88.5,
-          "to": 92.5,
+          "to": 92.533,
           "side": "any",
           "words": [
             "DISMISSIVE",
@@ -671,7 +746,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "side": "any",
           "words": [
@@ -811,7 +886,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "rect": [
             0.38,
@@ -955,14 +1030,77 @@
       ],
       "hud": [
         {
-          "from": 21.0,
-          "to": 23.4,
+          "from": 17.333,
+          "to": 26.667,
           "text": "AUDIENCE: LAUGHING"
         }
       ],
-      "note": "disasters line, her laugh, bewildered, crowd laughing",
+      "note": "disasters line, her laugh, interviewer laughing, crowd, interviewer, the man beside her",
       "in": 8.1,
-      "out": 23.4
+      "out": 27.6,
+      "logo": false,
+      "names": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 15.2,
+          "to": 17.333,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 17.333,
+          "to": 20.967,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 23.4,
+          "to": 26.667,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 88.5,
+          "to": 92.533,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 92.533,
+          "to": 96.7,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 116.8,
+          "to": 120.64,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        }
+      ]
     },
     {
       "src": "clips/powell_cspan.mp4",
@@ -1136,7 +1274,7 @@
         },
         {
           "from": 88.5,
-          "to": 92.5,
+          "to": 92.533,
           "side": "any",
           "words": [
             "DISMISSIVE",
@@ -1144,7 +1282,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "side": "any",
           "words": [
@@ -1284,7 +1422,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "rect": [
             0.38,
@@ -1435,7 +1573,70 @@
       ],
       "note": "'disagree with every single premise'",
       "in": 88.5,
-      "out": 92.5
+      "out": 92.533,
+      "logo": false,
+      "names": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 15.2,
+          "to": 17.333,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 17.333,
+          "to": 20.967,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 23.4,
+          "to": 26.667,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 88.5,
+          "to": 92.533,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 92.533,
+          "to": 96.7,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 116.8,
+          "to": 120.64,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        }
+      ]
     },
     {
       "src": "clips/powell_cspan.mp4",
@@ -1609,7 +1810,7 @@
         },
         {
           "from": 88.5,
-          "to": 92.5,
+          "to": 92.533,
           "side": "any",
           "words": [
             "DISMISSIVE",
@@ -1617,7 +1818,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "side": "any",
           "words": [
@@ -1757,7 +1958,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "rect": [
             0.38,
@@ -1907,8 +2108,71 @@
         }
       ],
       "note": "'billion dollar settlement says otherwise'",
-      "in": 92.5,
-      "out": 96.7
+      "in": 92.533,
+      "out": 96.7,
+      "logo": false,
+      "names": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 15.2,
+          "to": 17.333,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 17.333,
+          "to": 20.967,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 23.4,
+          "to": 26.667,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 88.5,
+          "to": 92.533,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 92.533,
+          "to": 96.7,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 116.8,
+          "to": 120.64,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        }
+      ]
     },
     {
       "src": "clips/powell_cspan.mp4",
@@ -2082,7 +2346,7 @@
         },
         {
           "from": 88.5,
-          "to": 92.5,
+          "to": 92.533,
           "side": "any",
           "words": [
             "DISMISSIVE",
@@ -2090,7 +2354,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "side": "any",
           "words": [
@@ -2230,7 +2494,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "rect": [
             0.38,
@@ -2381,7 +2645,70 @@
       ],
       "note": "'are you done with your ten-minute question?'",
       "in": 96.7,
-      "out": 99.0
+      "out": 99.0,
+      "logo": false,
+      "names": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 15.2,
+          "to": 17.333,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 17.333,
+          "to": 20.967,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 23.4,
+          "to": 26.667,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 88.5,
+          "to": 92.533,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 92.533,
+          "to": 96.7,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 116.8,
+          "to": 120.64,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        }
+      ]
     },
     {
       "src": "clips/powell_cspan.mp4",
@@ -2555,7 +2882,7 @@
         },
         {
           "from": 88.5,
-          "to": 92.5,
+          "to": 92.533,
           "side": "any",
           "words": [
             "DISMISSIVE",
@@ -2563,7 +2890,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "side": "any",
           "words": [
@@ -2703,7 +3030,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "rect": [
             0.38,
@@ -2854,7 +3181,70 @@
       ],
       "note": "'um okay'",
       "in": 99.0,
-      "out": 100.6
+      "out": 100.6,
+      "logo": false,
+      "names": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 15.2,
+          "to": 17.333,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 17.333,
+          "to": 20.967,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 23.4,
+          "to": 26.667,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 88.5,
+          "to": 92.533,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 92.533,
+          "to": 96.7,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 116.8,
+          "to": 120.64,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        }
+      ]
     },
     {
       "src": "clips/powell_cspan.mp4",
@@ -3028,7 +3418,7 @@
         },
         {
           "from": 88.5,
-          "to": 92.5,
+          "to": 92.533,
           "side": "any",
           "words": [
             "DISMISSIVE",
@@ -3036,7 +3426,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "side": "any",
           "words": [
@@ -3176,7 +3566,7 @@
           ]
         },
         {
-          "from": 92.5,
+          "from": 92.533,
           "to": 96.7,
           "rect": [
             0.38,
@@ -3325,9 +3715,72 @@
           "text": "AUDIENCE: LAUGHING"
         }
       ],
-      "note": "'couldn't be more proud of the agreement'",
+      "note": "'couldn't be more proud of the agreement that we just made'",
       "in": 114.1,
-      "out": 120.6
+      "out": 120.64,
+      "logo": false,
+      "names": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 15.2,
+          "to": 17.333,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 17.333,
+          "to": 20.967,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 23.4,
+          "to": 26.667,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 88.5,
+          "to": 92.533,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 92.533,
+          "to": 96.7,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "name": "DINA POWELL MCCORMICK"
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "name": "JASON CALACANIS"
+        },
+        {
+          "from": 116.8,
+          "to": 120.64,
+          "side": "left",
+          "name": "DINA POWELL MCCORMICK"
+        }
+      ]
     }
   ],
   "logo": "assets/logo_ingot.png"

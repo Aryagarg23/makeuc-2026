@@ -1,8 +1,13 @@
 # Pitch video: scene list
 
-**Opening (scene 1), built:** `edl.scene1.json` → `out/scene1.mp4`, 44.6 s.
+**Opening, built:** `edl.opening.json` → `out/opening.mp4`. Scene 1 → window-cloning glitch (`transition.py`) →
+scene 2 in the DedSec look with a glitched voice (`dedsec.py beats.scene2.json`; the hyperpop version, `hyperpop.py`, is retired).
+Next comes you to camera, in normal mode (footage still to shoot).
+
+**Scene 1:** `edl.scene1.json` → `out/scene1.mp4`, 44.6 s.
 - The settlement headline card, then 7 high-impact beats from the All-In clip, in the CYBER look.
-- Mood readouts by shot, her name title on her first close-up, the **+- II** tag on every frame, and Fallé underneath.
+- Mood readouts by shot, her name title on her first close-up, and Fallé underneath.
+- The creator mark (the ingot logo) appears once, on the headline card. There's no "+- II" text tag, because the logo already reads + − II.
 - Beats:
   1. the settlement question
   2. "two of the biggest disasters…", her laugh, the interviewer bewildered, the crowd laughing

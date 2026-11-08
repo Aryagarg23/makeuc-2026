@@ -101,12 +101,17 @@ def render(src: Path, dst: Path, start: float | None = None, end: float | None =
            crop: tuple[int, int, int, int] | None = None, label: str = "SUBJECT", seed: int = 7,
            subs: tuple[int, int, int, int] | None = None, moods: list | None = None, hud: list | None = None,
            pins: list | None = None, nofaces: list | None = None, titles: list | None = None,
-           tag: str | None = "+- II", logo: str | None = None, intro_burst: bool = True) -> int:
+           tag: str | None = "+- II", logo: str | None = None, intro_burst: bool = True, names: list | None = None) -> int:
     """moods: [{"from","to","side": "left"|"right"|"any","words": [...]}] in SOURCE seconds, by shot.
     hud: [{"from","to","text"}] screen-level readout. pins: [{"from","to","rect": [x,y,w,h]}] search regions
     (fractions of the picture) for faces the full-frame detector misses. nofaces: [{"from","to"}] spans with
-    detection off (wide shots, where lights and screens read as faces); pins still apply there."""
+    detection off (wide shots, where lights and screens read as faces); pins still apply there.
+    names: [{"from","to","side","name"}] like moods: who is in each shot, from the edit (shot timing), never
+    from the face. When names is given, a face with no name entry gets no tag; without it, faces get
+    "<label> 01"."""
     moods, hud, pins, nofaces, titles = moods or [], hud or [], pins or [], nofaces or [], titles or []
+    use_names = names is not None
+    names = names or []
     logo_im = None
     if logo:  # creator logo, top right, 90 px tall, alpha kept
         logo_im = Image.open(logo).convert("RGBA")
@@ -232,6 +237,12 @@ def render(src: Path, dst: Path, start: float | None = None, end: float | None =
                 idx = order if m.get("side", "any") == "any" else [order[0] if m["side"] == "left" else order[-1]]
                 for i in idx:
                     face_mood[i] = m["words"][int(now / 1.2) % len(m["words"])]
+        face_name = {}
+        for m in names:
+            if m["from"] <= now < m["to"] and order:
+                idx = order if m.get("side", "any") == "any" else [order[0] if m["side"] == "left" else order[-1]]
+                for i in idx:
+                    face_name[i] = m["name"]
 
         canvas = np.zeros((H, W, 3), np.uint8)
         canvas[oy:oy + ph, ox:ox + pw] = pic
@@ -261,7 +272,9 @@ def render(src: Path, dst: Path, start: float | None = None, end: float | None =
         d = ImageDraw.Draw(im)
         if not (bursting and burst_kind in ("photocopy", "halftone")):  # labels, hud, titles
             for k, x, y, w, h in boxes:
-                d.text((x - 8, y - 40), f"{label} {k + 1:02d}", font=f_tag, fill=WHITE)
+                tag_text = face_name.get(k) if use_names else f"{label} {k + 1:02d}"
+                if tag_text:
+                    d.text((x - 8, y - 40), tag_text, font=f_tag, fill=WHITE)
                 if k in face_mood:
                     mx, my = x + w + 30, y + 4
                     need = 30 + d.textlength(face_mood[k], font=f_mood)

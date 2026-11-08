@@ -103,7 +103,8 @@ def pixelate_eyes(src: Path, dst: Path, start: float | None, end: float | None, 
 
 def look(src: Path, dst: Path, name: str, eyes: bool = False, start: float | None = None,
          end: float | None = None, voice: str = "orig", crop=None, label: str = "SCAN", subs=None,
-         moods=None, hud=None, pins=None, nofaces=None, titles=None, tag="+- II", logo=None) -> None:
+         moods=None, hud=None, pins=None, nofaces=None, titles=None, tag="+- II", logo=None,
+         names=None) -> None:
     vf = LOOKS[name]
     trim = (["-ss", str(start)] if start else []) + (["-to", str(end)] if end is not None else [])
     with tempfile.TemporaryDirectory() as d:
@@ -113,7 +114,7 @@ def look(src: Path, dst: Path, name: str, eyes: bool = False, start: float | Non
             vsrc = Path(d) / "cyber.mp4"
             n = cyber.render(src, vsrc, start, end, tuple(crop) if crop else None, label,
                              subs=tuple(subs) if subs else None, moods=moods, hud=hud, pins=pins, nofaces=nofaces,
-                             titles=titles, tag=tag, logo=logo)
+                             titles=titles, tag=tag, logo=logo, names=names)
             print(f"cyber: LED eyes on {n} face-frames in {src.name}")
             vtrim = []
         elif eyes:

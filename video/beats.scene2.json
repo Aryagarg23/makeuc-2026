@@ -1,0 +1,134 @@
+{
+  "voice": {
+    "speaker": "Daniel",
+    "rate": 180,
+    "pitch": 0.78
+  },
+  "beats": [
+    {
+      "say": "We have a thermonuclear fix for this.",
+      "stickers": [
+        "☢️",
+        "💥",
+        "🔥"
+      ],
+      "shake": true,
+      "key": "THERMONUCLEAR FIX"
+    },
+    {
+      "say": "All of the dark patterns that keep you addicted.",
+      "stickers": [
+        "📱",
+        "🎰",
+        "🪝",
+        "🌀"
+      ],
+      "key": "DARK PATTERNS"
+    },
+    {
+      "say": "The ways around them are usually: get off your phone.",
+      "caption": "the ways around them are usually: \"get off your phone\"",
+      "stickers": [
+        "📵",
+        "🙄",
+        "📱"
+      ],
+      "key": "\"GET OFF YOUR PHONE\""
+    },
+    {
+      "say": "Buy a screen lock app.",
+      "caption": "\"buy a screen lock app\"",
+      "stickers": [
+        "🔒",
+        "📲",
+        "💸"
+      ],
+      "key": "\"BUY A SCREEN LOCK APP\""
+    },
+    {
+      "say": "Those methods are nothing beyond performative.",
+      "caption": "those methods are nothing beyond performative.",
+      "key": "PERFORMATIVE",
+      "stickers": [
+        "🎭",
+        "🤡",
+        "👏"
+      ]
+    },
+    {
+      "say": "I say no.",
+      "stickers": [
+        "🙅",
+        "🚫"
+      ],
+      "shout": "NO.",
+      "shake": true
+    },
+    {
+      "say": "Fight fire with fire.",
+      "stickers": [
+        "🔥",
+        "🧯",
+        "🔥",
+        "😈"
+      ],
+      "key": "FIGHT FIRE WITH FIRE"
+    },
+    {
+      "say": "Classic Pavlovian conditioning.",
+      "caption": "classic pavlovian conditioning.",
+      "key": "PAVLOVIAN CONDITIONING",
+      "stickers": [
+        "🐕",
+        "🔔",
+        "🍖",
+        "🧪"
+      ]
+    },
+    {
+      "say": "Every time the algorithm pulls your strings,",
+      "caption": "every time the algorithm pulls your strings,",
+      "stickers": [
+        "🕺",
+        "📱",
+        "💃"
+      ],
+      "strings": true,
+      "hold": 0.4,
+      "label": "THE ALGORITHM"
+    },
+    {
+      "say": "we hijack your subconscious",
+      "caption": "we hijack your subconscious",
+      "key": "HIJACK YOUR SUBCONSCIOUS",
+      "stickers": [
+        "🧠",
+        "🕹️",
+        "⚡"
+      ]
+    },
+    {
+      "say": "and artificially induce vertigo.",
+      "caption": "and artificially induce vertigo.",
+      "key": "INDUCE VERTIGO",
+      "stickers": [
+        "😵",
+        "🌀",
+        "🎢"
+      ],
+      "shake": true
+    },
+    {
+      "say": "Until scrolling makes you",
+      "caption": "until scrolling makes you SICK.",
+      "stickers": [
+        "📱",
+        "🤢",
+        "🤮"
+      ],
+      "shake": true,
+      "feral": "sick",
+      "key": "UNTIL SCROLLING MAKES YOU"
+    }
+  ]
+}
