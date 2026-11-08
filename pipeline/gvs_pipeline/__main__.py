@@ -58,9 +58,21 @@ def _run(lines: Iterable[str], a: argparse.Namespace, out: TextIO, esp=None) -> 
     if stale:
         raise SystemExit(f"buckets {stale} were enrolled at a different --window; re-enroll at {a.window} s")
     trig = Trigger(a.step, a.confirm)
+    feed = att = None
+    if getattr(a, "tribe_feed", None):
+        from . import tribe as T
+        from . import tribe_live as TL
+
+        feed, att = TL.Feed(a.tribe_feed), TL.Attributor(a.window)
+        anchors = tuple(T.load_score(p) for p in a.tribe_anchors)
     for obs in windows(_packets(lines), a.window, a.step):
         t = obs[0].window_start
+        if feed is not None:
+            for r in TL.step(feed, att, buckets, *anchors):
+                out.write(json.dumps(r) + "\n")
         best = C.strongest(C.classify(o, buckets) for o in obs)
+        if att is not None:
+            att.note(t, best.bucket if best is not None else None)
         fired = trig.update(t, best)
         rec: dict = {"window": t, "services": len(obs), "fired": fired is not None}
         if best is not None:
@@ -80,6 +92,8 @@ def cmd_classify(a: argparse.Namespace) -> int:
 
 
 def cmd_live(a: argparse.Namespace) -> int:
+    if bool(a.tribe_feed) != bool(a.tribe_anchors):
+        raise SystemExit("--tribe-feed and --tribe-anchors go together")
     esp = None
     if a.gvs or a.relay:
         from .gvs_link import Gvs
@@ -114,6 +128,8 @@ def main(argv: list[str] | None = None) -> int:
     c.set_defaults(fn=cmd_classify)
     l = sub.add_parser("live")
     l.add_argument("--gvs", type=Path, help="device env file with GVS_URL, GVS_TOKEN (gvs/tools/make_secrets.sh); omit for dry run")
+    l.add_argument("--tribe-feed", type=Path, help="tribe/live/scores.jsonl from tribe/screen_chunks.py")
+    l.add_argument("--tribe-anchors", type=Path, nargs=2, metavar=("NEUTRAL", "HIGH"))
     l.add_argument("--relay", nargs="?", const="http://127.0.0.1:8765", default=None,
                    help="send stimuli through the Bluetooth relay (gvs/tools/ble_bridge.py); default URL http://127.0.0.1:8765")
     l.add_argument("--max-ma", type=float, help="current at intensity 1, mA (<= firmware FW_MAX_MA 2.0)")

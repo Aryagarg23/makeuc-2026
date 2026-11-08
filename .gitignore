@@ -7,3 +7,4 @@ build/
 .pio/
 gvs/firmware/gvs_controller/secrets.h
 gvs/device.env
+tribe/live/
