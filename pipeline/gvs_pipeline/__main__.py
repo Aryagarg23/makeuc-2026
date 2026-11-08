@@ -69,8 +69,12 @@ def _run(lines: Iterable[str], a: argparse.Namespace, out: TextIO, esp=None) -> 
         from . import dashboard as D
 
         state = D.State(live_rules, buckets, esp is not None, getattr(a, "max_ma", None), a.window, a.step)
-        srv = D.serve(state, a.dashboard_host, a.dashboard)
-        print(f"dashboard: http://{a.dashboard_host}:{srv.server_address[1]}/", file=sys.stderr, flush=True)
+        rules_path = getattr(a, "rules", None) or a.store.with_name("rules.json")
+        key = D.key_for(a.dashboard_host, rules_path.with_name("dashboard.key"))
+        srv = D.serve(state, a.dashboard_host, a.dashboard, key)
+        shown = a.dashboard_host if a.dashboard_host != "0.0.0.0" else "<this machine's address>"
+        print(f"dashboard: http://{shown}:{srv.server_address[1]}/" + (f"#key={key}" if key else ""),
+              file=sys.stderr, flush=True)
     feed = att = None
     if getattr(a, "tribe_feed", None):
         from . import tribe as T
@@ -156,7 +160,7 @@ def main(argv: list[str] | None = None) -> int:
     l.add_argument("--hz", type=float, default=1.0, help="sine frequency, 0.5-2 Hz")
     l.add_argument("--dashboard", type=int, metavar="PORT", help="serve the rules dashboard on this port")
     l.add_argument("--dashboard-host", default="127.0.0.1",
-                   help="bind address; anyone who can reach the page can change what fires")
+                   help="bind address; off loopback every API call needs the key in dashboard.key (next to --rules)")
     l.set_defaults(fn=cmd_live)
     a = ap.parse_args(argv)
     if a.rules is None:

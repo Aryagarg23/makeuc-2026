@@ -23,6 +23,27 @@ been done. Details under "Not verified".
     arduino-cli compile -b arduino:zephyr:unoq matrix_status
     arduino-cli upload -p /dev/cu.usbmodem3279494652 -b arduino:zephyr:unoq matrix_status
 
+## Packet pipeline + rules dashboard on the board (`pipeline/`)
+
+    uno_q/pipeline/start_pipeline.sh demo            # synthetic traffic made on the board, dry run
+    uno_q/pipeline/start_pipeline.sh mac en0 0.5     # the Mac's tshark on en0 -> board; stimulates at up to 0.5 mA
+    uno_q/pipeline/start_pipeline.sh stop
+
+- **Where it runs:** the pipeline (`pipeline/gvs_pipeline`, pure stdlib) runs on the board under `/home/arduino/gvs/pipeline`.
+- **Dashboard:** on the arya-gvs hotspot at `http://10.42.0.1:8081/#key=KEY`, and on the Mac at `http://127.0.0.1:18081/#key=KEY` (adb forward). The start script prints both links.
+- **Key:** every `/api` call needs the key in `store/dashboard.key`, because friends share the hotspot. Without it they get 401 and see no traffic.
+- **Stimuli:** with an MA argument, stimuli go through fun mode's Bluetooth link (`fun_server.py` `/cmd` on :8080), so fun mode must be running.
+- **Packets come from the Mac,** for three reasons:
+  - The board has no tshark and no internet to install it.
+  - Raw capture needs root (sudo asks for a password).
+  - The Mac's tshark needs capture permission (Wireshark's ChmodBPF, or sudo); you have to set that up.
+- **Measured 2026-11-08 (demo mode):**
+  - Without the key, `/api/state` returns 401; with it, 200.
+  - A rule POSTed with the key is saved to `store/rules.json` on the board.
+  - That rule fires every 10 s (the refractory gap), at 50% for 1250 ms.
+  - The board's clock is ~14 months behind (no internet), so stimulus ages are measured on the board's clock.
+- **Not verified yet:** `mac` mode (needs capture permission on the Mac) and a real stimulus through fun mode from the pipeline.
+
 ## Linux side (once adb works)
 Default password for a never-configured board is `arduino` (per element14 review; the Arduino docs page fetched did not state it).
 

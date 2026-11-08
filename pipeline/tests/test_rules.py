@@ -98,9 +98,10 @@ def test_rules_file_sits_next_to_the_store(tmp_path, capsys):
     assert recs and not any(r.get("bucket") for r in recs)
 
 
-def _req(url, body=None):
+def _req(url, body=None, key=None):
     data = json.dumps(body).encode() if body is not None else None
-    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+    h = {"Content-Type": "application/json", **({"X-Dashboard-Key": key} if key else {})}
+    req = urllib.request.Request(url, data=data, headers=h)
     try:
         with urllib.request.urlopen(req, timeout=5) as r:
             return r.status, r.read()
@@ -123,6 +124,8 @@ def test_dashboard_api(tmp_path):
         s = json.loads(_req(base + "/api/state")[1])
         assert s["now"][0]["service"] == "tiktokv.com" and s["now"][0]["intensity"] == 0.9
         assert s["seen"][0]["service"] == "tiktokv.com" and s["stims"][0]["ms"] == 1850
+        # Reason: the UNO Q's clock is months off (no internet), so ages must use the server's clock, not the browser's.
+        assert 0 <= s["server_time"] - s["stims"][0]["wall"] < 5
         code, body = _req(base + "/api/rules", {"services": {"tiktokv.com": 0}, "buckets": {b.name: {"on": False, "weight": 0.4}}})
         assert code == 200 and json.loads(body)["rules"]["services"] == {"tiktokv.com": 0.0}
         on_disk = json.loads((tmp_path / "rules.json").read_text())
@@ -130,5 +133,27 @@ def test_dashboard_api(tmp_path):
         assert code == 400 and "between 0 and 1" in json.loads(body)["error"]
         assert json.loads((tmp_path / "rules.json").read_text()) == on_disk  # a refused edit changes nothing
         assert live.get().decide(o, [b]).bucket is None  # and the accepted one is what the loop now reads
+    finally:
+        srv.shutdown()
+
+
+def test_dashboard_off_loopback_needs_the_key(tmp_path):
+    # Reason: on the UNO Q the page sits on the hotspot friends join for fun mode; they must not read your
+    # traffic or change what nauseates you.
+    assert D.key_for("127.0.0.1", tmp_path / "k") is None and not (tmp_path / "k").exists()
+    key = D.key_for("0.0.0.0", tmp_path / "k")
+    assert key and D.key_for("0.0.0.0", tmp_path / "k") == key  # stable, so the link keeps working
+    b = tiktok_bucket()
+    live = R.Live(tmp_path / "rules.json", {b.name})
+    srv = D.serve(D.State(live, [b], False, None, W, 1.0), "127.0.0.1", 0, key)
+    base = f"http://127.0.0.1:{srv.server_address[1]}"
+    try:
+        assert _req(base + "/")[0] == 200  # the page itself is harmless without the key
+        assert _req(base + "/api/state")[0] == 401
+        assert _req(base + "/api/state", key="wrong")[0] == 401
+        assert _req(base + "/api/rules", {"paused": True})[0] == 401
+        assert not (tmp_path / "rules.json").exists() and not live.get().paused
+        assert _req(base + "/api/state", key=key)[0] == 200
+        assert _req(base + "/api/rules", {"paused": True}, key=key)[0] == 200 and live.get().paused
     finally:
         srv.shutdown()

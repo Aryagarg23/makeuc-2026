@@ -5,11 +5,15 @@ start the nausea (rules.py). Standard library only.
   GET  /api/state   services in the latest window, recent services, rules, buckets, recent stimuli
   POST /api/rules   replace the rules (JSON, validated by rules.Rules.parse); returns the new state
 
-Binds to 127.0.0.1 unless told otherwise: anyone who can reach the page can change what fires.
+Binds to 127.0.0.1 unless told otherwise. Off loopback (the UNO Q's hotspot, which friends join for fun mode)
+a key is required on every /api call (header X-Dashboard-Key; the page reads it from the URL's #key=...), so
+people on the same network can neither see the traffic nor change what fires.
 """
 from __future__ import annotations
 
+import hmac
 import json
+import secrets
 import threading
 import time
 from collections import deque
@@ -62,6 +66,7 @@ class State:
         with self._lock:
             return {
                 "config": self.config, "window": self._last_t, "now": list(self._now),
+                "server_time": time.time(),  # ages are measured on the server's clock: the UNO Q's is not synced
                 "seen": sorted(self._seen.values(), key=lambda s: -s["peak_kbps"]),
                 "stims": list(self._stims), "rules": rules.to_json(),
                 "buckets": [{"name": b.name, "enrolled_weight": b.weight, "domains": sorted(b.domains)}
@@ -69,8 +74,27 @@ class State:
             }
 
 
-def serve(state: State, host: str = "127.0.0.1", port: int = 8080) -> ThreadingHTTPServer:
+LOOPBACK = {"127.0.0.1", "localhost", "::1"}
+
+
+def key_for(host: str, path: Path) -> str | None:
+    """No key on loopback. Otherwise a key kept in `path`, created once, so the dashboard link stays the same."""
+    if host in LOOPBACK:
+        return None
+    if not path.exists():
+        path.write_text(secrets.token_urlsafe(9) + "\n")
+        path.chmod(0o600)
+    return path.read_text().strip()
+
+
+def serve(state: State, host: str = "127.0.0.1", port: int = 8080, key: str | None = None) -> ThreadingHTTPServer:
     class H(BaseHTTPRequestHandler):
+        def _locked(self) -> bool:
+            if key is None or hmac.compare_digest(self.headers.get("X-Dashboard-Key", ""), key):
+                return False
+            self._json(401, {"error": "locked: open the dashboard link that includes #key=..."})
+            return True
+
         def _send(self, code: int, body: bytes, ctype: str) -> None:
             self.send_response(code)
             self.send_header("Content-Type", ctype)
@@ -86,13 +110,16 @@ def serve(state: State, host: str = "127.0.0.1", port: int = 8080) -> ThreadingH
             if self.path == "/":
                 self._send(200, PAGE.read_bytes(), "text/html; charset=utf-8")
             elif self.path == "/api/state":
-                self._json(200, state.snapshot())
+                if not self._locked():
+                    self._json(200, state.snapshot())
             else:
                 self._json(404, {"error": "not found"})
 
         def do_POST(self) -> None:
             if self.path != "/api/rules":
                 return self._json(404, {"error": "not found"})
+            if self._locked():
+                return
             try:
                 n = int(self.headers.get("Content-Length", "0"))
                 if n > 64_000:

@@ -100,6 +100,8 @@
 <script>
 const $ = (id) => document.getElementById(id);
 let state = null, rules = null, dragging = false, sendTimer = null;
+const KEY = new URLSearchParams(location.hash.slice(1)).get("key") || "";
+const HDR = {"Content-Type": "application/json", "X-Dashboard-Key": KEY};
 const DEFAULT_W = 0.6;
 
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c])); }
@@ -107,7 +109,8 @@ function pct(w) { return Math.round(w * 100) + "%"; }
 
 async function refresh() {
   try {
-    const r = await fetch("/api/state", {cache: "no-store"});
+    const r = await fetch("/api/state", {cache: "no-store", headers: HDR});
+    if (r.status === 401) { $("status").textContent = "Locked: open the link with its #key"; $("dot").className = "dot stale"; return; }
     state = await r.json();
     if (!dragging && !sendTimer) rules = state.rules;
     render();
@@ -119,8 +122,7 @@ async function refresh() {
 function send() {
   clearTimeout(sendTimer);
   sendTimer = setTimeout(async () => {
-    const r = await fetch("/api/rules", {method: "POST", headers: {"Content-Type": "application/json"},
-                                         body: JSON.stringify(rules)});
+    const r = await fetch("/api/rules", {method: "POST", headers: HDR, body: JSON.stringify(rules)});
     const body = await r.json();
     sendTimer = null;
     if (!r.ok) { $("err").textContent = body.error; return; }
@@ -183,7 +185,7 @@ function render() {
 
   $("stims").innerHTML = state.stims.length === 0 ? `<div class="empty">Nothing fired yet.</div>` :
     state.stims.map(s => `<div class="stim"><span>${esc(s.service)} <span class="sub">${esc(s.via === "rule" ? "rule" : s.bucket)}</span></span>
-      <span class="sub">${pct(s.intensity)} · ${s.ms} ms · ${Math.round((Date.now() / 1000 - s.wall))} s ago${s.gvs ? " · " + esc(JSON.stringify(s.gvs)) : ""}</span></div>`).join("");
+      <span class="sub">${pct(s.intensity)} · ${s.ms} ms · ${Math.max(0, Math.round(state.server_time - s.wall))} s ago${s.gvs ? " · " + esc(JSON.stringify(s.gvs)) : ""}</span></div>`).join("");
 }
 
 document.addEventListener("click", (e) => {
