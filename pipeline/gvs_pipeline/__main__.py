@@ -4,7 +4,7 @@
       [--tribe CLIP.tribe.json --tribe-anchors NEUTRAL.tribe.json HIGH.tribe.json]
                                            cap W by TRIBE's predicted drive for the screen recording
   classify CAPTURE.tsv                     dry run over a saved capture, one line per window
-  live [--esp32 PORT]                      read tshark lines on stdin, stimulate on confirmed windows
+  live [--gvs gvs/device.env --max-ma MA]  read tshark lines on stdin, stimulate on confirmed windows
 
 Windows are --window s long and slide every --step s. A stimulus needs --confirm consecutive
 steps agreeing on a bucket (gvs_pipeline/trigger.py).
@@ -68,7 +68,7 @@ def _run(lines: Iterable[str], a: argparse.Namespace, out: TextIO, esp=None) -> 
             rec.update(bucket=best.bucket, service=best.obs.service, via=best.via,
                        confidence=round(best.confidence, 3), intensity=round(best.intensity, 3), ms=ms)
             if fired is not None and esp is not None:
-                rec["esp32"] = esp.stim(best.bucket, best.intensity, ms)
+                rec["gvs"] = esp.stim(best.bucket, best.intensity, ms)
         out.write(json.dumps(rec) + "\n")
         out.flush()
 
@@ -81,17 +81,17 @@ def cmd_classify(a: argparse.Namespace) -> int:
 
 def cmd_live(a: argparse.Namespace) -> int:
     esp = None
-    if a.esp32:
-        from .esp32_link import Esp32
+    if a.gvs:
+        from .gvs_link import Gvs
 
-        esp = Esp32.open(a.esp32)
-        print(json.dumps({"esp32_arm": esp.arm()}), flush=True)
+        if a.max_ma is None:
+            raise SystemExit("--gvs needs --max-ma: the ceiling you titrated to on-head (research/gvs.md)")
+        esp = Gvs.from_env(a.gvs, a.max_ma, a.hz)
     try:
         _run(sys.stdin, a, sys.stdout, esp)
     finally:
         if esp is not None:
             esp.stop()
-            esp.disarm()
     return 0
 
 
@@ -113,7 +113,9 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("capture")
     c.set_defaults(fn=cmd_classify)
     l = sub.add_parser("live")
-    l.add_argument("--esp32", help="serial port, e.g. /dev/cu.usbmodem1101; omit for dry run")
+    l.add_argument("--gvs", type=Path, help="device env file with GVS_URL, GVS_TOKEN (gvs/tools/make_secrets.sh); omit for dry run")
+    l.add_argument("--max-ma", type=float, help="current at intensity 1, mA (<= firmware FW_MAX_MA 2.0)")
+    l.add_argument("--hz", type=float, default=1.0, help="sine frequency, 0.5-2 Hz")
     l.set_defaults(fn=cmd_live)
     a = ap.parse_args(argv)
     return a.fn(a)

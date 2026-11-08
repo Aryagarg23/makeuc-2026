@@ -7,7 +7,6 @@ from hypothesis import given, settings, strategies as st
 
 from gvs_pipeline import classify as C
 from gvs_pipeline.__main__ import main
-from gvs_pipeline.esp32_link import REARM_EVERY_S, Esp32
 from gvs_pipeline.flows import UNKNOWN, Observation, features, service_of, unnamed_server, windows
 from gvs_pipeline.packets import Packet, parse_line, to_line
 
@@ -203,41 +202,6 @@ def test_store_round_trip(tmp_path):
     assert [(x.name, x.weight, x.domains, x.shape) for x in got] == [(x.name, x.weight, x.domains, x.shape) for x in b]
 
 
-class FakeSerial:
-    def __init__(self, replies=None):
-        self.sent: list[dict] = []
-        self.replies = list(replies or [])
-
-    def write(self, data: bytes):
-        self.sent.append(json.loads(data))
-        return len(data)
-
-    def readline(self) -> bytes:
-        return (self.replies.pop(0) if self.replies else '{"ok":true}').encode() + b"\n"
-
-
-@settings(max_examples=200)
-@given(st.floats(allow_nan=False, allow_infinity=False, width=32), st.integers(0, 10**6))
-def test_link_never_sends_intensity_outside_unit(level, ms):
-    io_ = FakeSerial()
-    Esp32(io_, clock=lambda: 0.0).stim("b", level, ms)
-    stim = [m for m in io_.sent if m["cmd"] == "stim"][0]
-    assert 0.0 <= stim["intensity"] <= 1.0
-
-
-def test_link_rearms_before_firmware_expiry():
-    # Reason: firmware disarms after 600 s; re-arming at 300 s keeps a live session armed.
-    t = [0.0]
-    io_ = FakeSerial()
-    esp = Esp32(io_, clock=lambda: t[0])
-    esp.stim("b", 0.5, 500)
-    t[0] = REARM_EVERY_S - 1
-    esp.stim("b", 0.5, 500)
-    t[0] = REARM_EVERY_S + 1
-    esp.stim("b", 0.5, 500)
-    assert [m["cmd"] for m in io_.sent] == ["arm", "stim", "stim", "arm", "stim"]
-
-
 def test_cli_enroll_then_classify(tmp_path, capsys):
     ex = tmp_path / "tiktok.tsv"
     ex.write_text("\n".join(to_line(p) for p in flow("9.9.9.9", "v.tiktokv.com", 0.0, 20)) + "\n")
@@ -253,31 +217,3 @@ def test_cli_enroll_then_classify(tmp_path, capsys):
     assert main(["--store", str(store), "classify", str(cap)]) == 0
     recs = [json.loads(l) for l in capsys.readouterr().out.splitlines()]
     assert recs and all(r["bucket"] == "short_video" and r["intensity"] == 0.6 for r in recs)
-
-
-@given(st.sampled_from(["estop", "not_armed"]))
-def test_link_never_rearms_after_external_stop(reason):
-    # Reason: E-stop or a manual disarm is the person opting out; auto re-arm would undo it.
-    t = [0.0]
-    io_ = FakeSerial(['{"ok":true}', '{"ok":false,"reason":"%s"}' % reason])
-    esp = Esp32(io_, clock=lambda: t[0])
-    esp.stim("b", 0.5, 500)
-    t[0] = REARM_EVERY_S * 10
-    r = esp.stim("b", 0.5, 500)
-    assert r == {"ok": False, "reason": "halted", "cause": reason}
-    assert [m["cmd"] for m in io_.sent] == ["arm", "stim"]
-
-
-def test_link_cooldown_does_not_halt():
-    io_ = FakeSerial(['{"ok":true}', '{"ok":false,"reason":"cooldown"}'])
-    esp = Esp32(io_, clock=lambda: 0.0)
-    esp.stim("b", 0.5, 500)
-    esp.stim("b", 0.5, 500)
-    assert esp.halted is None
-
-
-def test_link_halts_when_arm_refused():
-    io_ = FakeSerial(['{"ok":false,"reason":"estop"}'])
-    esp = Esp32(io_, clock=lambda: 0.0)
-    assert esp.stim("b", 0.5, 500)["ok"] is False
-    assert esp.halted == "estop" and [m["cmd"] for m in io_.sent] == ["arm"]

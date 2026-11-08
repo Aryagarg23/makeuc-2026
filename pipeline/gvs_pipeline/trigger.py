@@ -3,14 +3,15 @@
 Sliding windows give a decision every step. A stimulus fires only when the same bucket wins
 CONFIRM consecutive steps, then nothing fires for REFRACTORY_S. Two agreeing steps cost one
 step of latency and stop a single odd window (one photo in a chat) from firing; the refractory
-period matches the firmware cooldown so the link never sends a stim the ESP32 would refuse.
+period covers the slowest pulse the firmware can run plus its cooldown, so the link never
+sends a stim the device would refuse with 409/429.
 """
 from __future__ import annotations
 
 from .classify import Decision
 
 CONFIRM = 2
-REFRACTORY_S = 5.0  # esp32/gvs_controller/safety.h COOLDOWN_MS
+REFRACTORY_S = 10.0  # >= HV_WAIT_MS + MAX_MS + COOLDOWN_MS in gvs/firmware/gvs_controller (9.5 s)
 
 
 class Trigger:

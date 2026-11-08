@@ -14,7 +14,7 @@ from gvs_pipeline.trigger import CONFIRM, REFRACTORY_S, Trigger
 
 from test_reels_vs_dms import CDN, CLIENT, api_chatter, photo_in_dm, texting, video
 
-SAFETY_H = Path(__file__).resolve().parents[2] / "esp32" / "gvs_controller" / "safety.h"
+FIRMWARE = Path(__file__).resolve().parents[2] / "gvs" / "firmware" / "gvs_controller" / "gvs_controller.ino"
 
 times = st.lists(st.floats(0, 60, allow_nan=False), min_size=1, max_size=60).map(sorted)
 
@@ -79,10 +79,14 @@ def test_enroll_records_window_length_and_store_keeps_it(tmp_path):
     assert C.load(tmp_path / "p.json")[0].window_s == 3.0
 
 
-def test_refractory_matches_firmware_cooldown():
-    # Reason: a shorter refractory sends stims the firmware refuses; a longer one silently drops pairings.
-    ms = int(re.search(r"COOLDOWN_MS\s*=\s*(\d+)", SAFETY_H.read_text()).group(1))
-    assert REFRACTORY_S * 1000 == ms
+def fw(name):
+    return int(re.search(rf"{name}\s*=\s*(\d+)", FIRMWARE.read_text()).group(1))
+
+
+def test_refractory_covers_slowest_pulse_and_cooldown():
+    # Reason: firmware cooldown starts when a pulse ends (after HV charge-up and up to MAX_MS of stimulus);
+    # a shorter refractory sends stims the device refuses, and the refusal is a missed pairing.
+    assert REFRACTORY_S * 1000 >= fw("HV_WAIT_MS") + fw("MAX_MS") + fw("COOLDOWN_MS")
 
 
 def d(bucket):

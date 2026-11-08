@@ -2,7 +2,7 @@
 
 Packet lines → per-service sliding flow windows → one-shot bucket → confirm over consecutive steps → stimulus intensity → ESP32.
 
-Pure Python 3 (stdlib; `pyserial` only for the ESP32 link), so it runs on the Mac or on the UNO Q's Linux side.
+Pure Python 3 standard library, so it runs on the Mac or on the UNO Q's Linux side.
 
 ## Input
 
@@ -13,10 +13,10 @@ tshark `-T fields -E separator=/t` lines in the column order of `gvs_pipeline/pa
 ```bash
 python -m gvs_pipeline enroll short_video tiktok_session.tsv --weight 0.8
 python -m gvs_pipeline classify some_capture.tsv
-ssh unoq ./capture.sh | python -m gvs_pipeline live --esp32 /dev/cu.usbmodem1101
+ssh unoq ./capture.sh | python -m gvs_pipeline live --gvs ../gvs/device.env --max-ma 0.5
 ```
 
-`live` without `--esp32` is a dry run: one JSON line per window, nothing sent.
+`live` without `--gvs` is a dry run: one JSON line per window, nothing sent. `--max-ma` is required with `--gvs` and is the current at intensity 1: use the ceiling you reached in the on-head titration (`../research/gvs.md`), never above the firmware's 2.0.
 
 ## How a window is decided (`gvs_pipeline/classify.py`)
 
@@ -26,9 +26,11 @@ ssh unoq ./capture.sh | python -m gvs_pipeline live --esp32 /dev/cu.usbmodem1101
 - Named but not enrolled → nothing. Never shape-matched (`test_named_unenrolled_service_never_stimulated`).
 - No name ever seen → nearest flow-shape prototype if similarity ≥ 0.80. Intensity scales from 0 at threshold up to the weight (`test_unnamed_flow_falls_back_to_shape`).
 - Windows are 3 s long and slide every 1 s (`--window`, `--step`). A service moving under 5 kB/s in a window is never stimulated (`classify.py:min_bytes`).
-- A stimulus fires only when the same bucket is the strongest decision for 2 consecutive steps (`--confirm`), then nothing fires for 5 s, which is the firmware cooldown (`trigger.py`, `test_refractory_matches_firmware_cooldown`). On synthetic reels the first stimulus lands within 4 s of onset (`test_reels_fire_within_four_seconds_at_3s_windows`). Why 3 s and 2 steps: `../research/conditioning.md` §2 and `../research/traffic_fingerprinting.md` §5. Duration is 500–2000 ms, capped at the firmware ceiling.
+- A stimulus fires only when the same bucket is the strongest decision for 2 consecutive steps (`--confirm`), then nothing fires for 10 s, which covers the device's HV charge-up, longest pulse and cooldown (`trigger.py`, `test_refractory_covers_slowest_pulse_and_cooldown`). On synthetic reels the first stimulus lands within 4 s of onset (`test_reels_fire_within_four_seconds_at_3s_windows`). Why 3 s and 2 steps: `../research/conditioning.md` §2 and `../research/traffic_fingerprinting.md` §5. Duration is 500–2000 ms, then rounded to whole sine cycles.
 - Buckets remember the window length they were enrolled at. Classifying at a different `--window` is refused, because three of the six features scale with window length.
-- The ESP32 enforces its own caps regardless: arming, 5 s cooldown, 30 per hour, max duty (`esp32/README.md`).
+- Every stimulus is a zero-mean sine burst of whole cycles at `--hz` (default 1 Hz; the period must be a whole number of ms), current = intensity × `--max-ma`, rounded down (`gvs_link.py`). The firmware's DC mode is never used.
+- A latched fault (423) or a rejected token (403) halts the link for good. Busy, cooldown and hourly-limit refusals are skipped stimuli (`tests/test_gvs_link.py`).
+- The device enforces its own caps regardless: 2.0 mA, 3000 ms, 5 s cooldown, 30 pulses per hour, HV cutoff, current readback trip (`../gvs/README.md`).
 
 ## TRIBE weight cap
 
@@ -51,7 +53,7 @@ Record each exemplar doing only that thing (2 min of reels, 2 min of chatting wi
 ## Tests
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install pyserial pytest hypothesis
+python3 -m venv .venv && .venv/bin/pip install pytest hypothesis
 .venv/bin/python -m pytest -q
 ```
 
@@ -60,4 +62,4 @@ python3 -m venv .venv && .venv/bin/pip install pyserial pytest hypothesis
 - TRIBE v2 is used only at enrollment, on screen recordings. It isn't in the live loop: the exit node sees encrypted packets, and TRIBE runs slower than real time.
 - Not run against real tailnet traffic yet. Every test uses synthetic flows, including the Instagram ones. Real Instagram may share one QUIC connection between API and media, prefetch reels while you're in DMs, or open DM videos that look like reels. Only real exemplar captures will show whether the shapes separate.
 - Not run on the UNO Q yet.
-- The ESP32 link uses serial only. The firmware's HTTP endpoint is unauthenticated and untested.
+- The HTTP link is tested against a fake device only. Nothing has been sent to the real board over WiFi yet.
