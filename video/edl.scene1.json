@@ -1,0 +1,3334 @@
+{
+  "tag": "+- II",
+  "music": {
+    "file": "clips/falle.mp3",
+    "gain": 0.3,
+    "start": 0,
+    "fade_out": 2.5
+  },
+  "segments": [
+    {
+      "note": "settlement headline",
+      "card": {
+        "type": "headline",
+        "style": "dedsec",
+        "text": "Meta to pay up to $18B to settle states' claims it designed apps to addict kids",
+        "source": "Reuters / AP, Aug 26 2026"
+      },
+      "dur": 4,
+      "look": "dedsec"
+    },
+    {
+      "src": "clips/powell_cspan.mp4",
+      "look": "cyber",
+      "crop": [
+        0,
+        437,
+        720,
+        405
+      ],
+      "subs": [
+        0,
+        880,
+        720,
+        160
+      ],
+      "audio": "orig",
+      "titles": [
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "title": "Meta President Dina Powell McCormick",
+          "sub": "ALL-IN SUMMIT 2026  //  via @scrolling2death"
+        }
+      ],
+      "moods": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SERIOUS",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 8.1,
+          "to": 10.9,
+          "side": "any",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 14.6,
+          "to": 15.2,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "left",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "INCREDULOUS",
+            "STUNNED"
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "SPEECHLESS",
+            "INCREDULOUS"
+          ]
+        },
+        {
+          "from": 26.7,
+          "to": 27.6,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "left",
+          "words": [
+            "UNBOTHERED",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 62.4,
+          "to": 66.7,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 77.2,
+          "to": 82.0,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 88.5,
+          "to": 92.5,
+          "side": "any",
+          "words": [
+            "DISMISSIVE",
+            "DEFIANT"
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "side": "any",
+          "words": [
+            "INCREDULOUS",
+            "BEWILDERED"
+          ]
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "words": [
+            "DEFIANT",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "words": [
+            "STUNNED",
+            "SPEECHLESS"
+          ]
+        },
+        {
+          "from": 106.5,
+          "to": 108.1,
+          "side": "any",
+          "words": [
+            "DEFLECTING",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "left",
+          "words": [
+            "ON MESSAGE",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 114.1,
+          "to": 116.8,
+          "side": "any",
+          "words": [
+            "OBSERVING",
+            "SILENT"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "left",
+          "words": [
+            "PROUD"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        }
+      ],
+      "pins": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        }
+      ],
+      "nofaces": [
+        {
+          "from": 0,
+          "to": 1.4
+        },
+        {
+          "from": 21.0,
+          "to": 23.4
+        },
+        {
+          "from": 54.2,
+          "to": 62.4
+        },
+        {
+          "from": 86.4,
+          "to": 88.5
+        },
+        {
+          "from": 100.6,
+          "to": 102.8
+        },
+        {
+          "from": 102.8,
+          "to": 106.5
+        },
+        {
+          "from": 15.2,
+          "to": 17.3
+        },
+        {
+          "from": 27.6,
+          "to": 34.4
+        },
+        {
+          "from": 108.1,
+          "to": 114.1
+        },
+        {
+          "from": 116.8,
+          "to": 120.6
+        }
+      ],
+      "hud": [
+        {
+          "from": 21.0,
+          "to": 23.4,
+          "text": "AUDIENCE: LAUGHING"
+        }
+      ],
+      "note": "settlement question",
+      "in": 1.4,
+      "out": 8.1
+    },
+    {
+      "src": "clips/powell_cspan.mp4",
+      "look": "cyber",
+      "crop": [
+        0,
+        437,
+        720,
+        405
+      ],
+      "subs": [
+        0,
+        880,
+        720,
+        160
+      ],
+      "audio": "orig",
+      "titles": [
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "title": "Meta President Dina Powell McCormick",
+          "sub": "ALL-IN SUMMIT 2026  //  via @scrolling2death"
+        }
+      ],
+      "moods": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SERIOUS",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 8.1,
+          "to": 10.9,
+          "side": "any",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 14.6,
+          "to": 15.2,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "left",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "INCREDULOUS",
+            "STUNNED"
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "SPEECHLESS",
+            "INCREDULOUS"
+          ]
+        },
+        {
+          "from": 26.7,
+          "to": 27.6,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "left",
+          "words": [
+            "UNBOTHERED",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 62.4,
+          "to": 66.7,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 77.2,
+          "to": 82.0,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 88.5,
+          "to": 92.5,
+          "side": "any",
+          "words": [
+            "DISMISSIVE",
+            "DEFIANT"
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "side": "any",
+          "words": [
+            "INCREDULOUS",
+            "BEWILDERED"
+          ]
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "words": [
+            "DEFIANT",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "words": [
+            "STUNNED",
+            "SPEECHLESS"
+          ]
+        },
+        {
+          "from": 106.5,
+          "to": 108.1,
+          "side": "any",
+          "words": [
+            "DEFLECTING",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "left",
+          "words": [
+            "ON MESSAGE",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 114.1,
+          "to": 116.8,
+          "side": "any",
+          "words": [
+            "OBSERVING",
+            "SILENT"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "left",
+          "words": [
+            "PROUD"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        }
+      ],
+      "pins": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        }
+      ],
+      "nofaces": [
+        {
+          "from": 0,
+          "to": 1.4
+        },
+        {
+          "from": 21.0,
+          "to": 23.4
+        },
+        {
+          "from": 54.2,
+          "to": 62.4
+        },
+        {
+          "from": 86.4,
+          "to": 88.5
+        },
+        {
+          "from": 100.6,
+          "to": 102.8
+        },
+        {
+          "from": 102.8,
+          "to": 106.5
+        },
+        {
+          "from": 15.2,
+          "to": 17.3
+        },
+        {
+          "from": 27.6,
+          "to": 34.4
+        },
+        {
+          "from": 108.1,
+          "to": 114.1
+        },
+        {
+          "from": 116.8,
+          "to": 120.6
+        }
+      ],
+      "hud": [
+        {
+          "from": 21.0,
+          "to": 23.4,
+          "text": "AUDIENCE: LAUGHING"
+        }
+      ],
+      "note": "disasters line, her laugh, bewildered, crowd laughing",
+      "in": 8.1,
+      "out": 23.4
+    },
+    {
+      "src": "clips/powell_cspan.mp4",
+      "look": "cyber",
+      "crop": [
+        0,
+        437,
+        720,
+        405
+      ],
+      "subs": [
+        0,
+        880,
+        720,
+        160
+      ],
+      "audio": "orig",
+      "titles": [
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "title": "Meta President Dina Powell McCormick",
+          "sub": "ALL-IN SUMMIT 2026  //  via @scrolling2death"
+        }
+      ],
+      "moods": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SERIOUS",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 8.1,
+          "to": 10.9,
+          "side": "any",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 14.6,
+          "to": 15.2,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "left",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "INCREDULOUS",
+            "STUNNED"
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "SPEECHLESS",
+            "INCREDULOUS"
+          ]
+        },
+        {
+          "from": 26.7,
+          "to": 27.6,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "left",
+          "words": [
+            "UNBOTHERED",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 62.4,
+          "to": 66.7,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 77.2,
+          "to": 82.0,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 88.5,
+          "to": 92.5,
+          "side": "any",
+          "words": [
+            "DISMISSIVE",
+            "DEFIANT"
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "side": "any",
+          "words": [
+            "INCREDULOUS",
+            "BEWILDERED"
+          ]
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "words": [
+            "DEFIANT",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "words": [
+            "STUNNED",
+            "SPEECHLESS"
+          ]
+        },
+        {
+          "from": 106.5,
+          "to": 108.1,
+          "side": "any",
+          "words": [
+            "DEFLECTING",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "left",
+          "words": [
+            "ON MESSAGE",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 114.1,
+          "to": 116.8,
+          "side": "any",
+          "words": [
+            "OBSERVING",
+            "SILENT"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "left",
+          "words": [
+            "PROUD"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        }
+      ],
+      "pins": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        }
+      ],
+      "nofaces": [
+        {
+          "from": 0,
+          "to": 1.4
+        },
+        {
+          "from": 21.0,
+          "to": 23.4
+        },
+        {
+          "from": 54.2,
+          "to": 62.4
+        },
+        {
+          "from": 86.4,
+          "to": 88.5
+        },
+        {
+          "from": 100.6,
+          "to": 102.8
+        },
+        {
+          "from": 102.8,
+          "to": 106.5
+        },
+        {
+          "from": 15.2,
+          "to": 17.3
+        },
+        {
+          "from": 27.6,
+          "to": 34.4
+        },
+        {
+          "from": 108.1,
+          "to": 114.1
+        },
+        {
+          "from": 116.8,
+          "to": 120.6
+        }
+      ],
+      "hud": [
+        {
+          "from": 21.0,
+          "to": 23.4,
+          "text": "AUDIENCE: LAUGHING"
+        }
+      ],
+      "note": "'disagree with every single premise'",
+      "in": 88.5,
+      "out": 92.5
+    },
+    {
+      "src": "clips/powell_cspan.mp4",
+      "look": "cyber",
+      "crop": [
+        0,
+        437,
+        720,
+        405
+      ],
+      "subs": [
+        0,
+        880,
+        720,
+        160
+      ],
+      "audio": "orig",
+      "titles": [
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "title": "Meta President Dina Powell McCormick",
+          "sub": "ALL-IN SUMMIT 2026  //  via @scrolling2death"
+        }
+      ],
+      "moods": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SERIOUS",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 8.1,
+          "to": 10.9,
+          "side": "any",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 14.6,
+          "to": 15.2,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "left",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "INCREDULOUS",
+            "STUNNED"
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "SPEECHLESS",
+            "INCREDULOUS"
+          ]
+        },
+        {
+          "from": 26.7,
+          "to": 27.6,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "left",
+          "words": [
+            "UNBOTHERED",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 62.4,
+          "to": 66.7,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 77.2,
+          "to": 82.0,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 88.5,
+          "to": 92.5,
+          "side": "any",
+          "words": [
+            "DISMISSIVE",
+            "DEFIANT"
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "side": "any",
+          "words": [
+            "INCREDULOUS",
+            "BEWILDERED"
+          ]
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "words": [
+            "DEFIANT",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "words": [
+            "STUNNED",
+            "SPEECHLESS"
+          ]
+        },
+        {
+          "from": 106.5,
+          "to": 108.1,
+          "side": "any",
+          "words": [
+            "DEFLECTING",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "left",
+          "words": [
+            "ON MESSAGE",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 114.1,
+          "to": 116.8,
+          "side": "any",
+          "words": [
+            "OBSERVING",
+            "SILENT"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "left",
+          "words": [
+            "PROUD"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        }
+      ],
+      "pins": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        }
+      ],
+      "nofaces": [
+        {
+          "from": 0,
+          "to": 1.4
+        },
+        {
+          "from": 21.0,
+          "to": 23.4
+        },
+        {
+          "from": 54.2,
+          "to": 62.4
+        },
+        {
+          "from": 86.4,
+          "to": 88.5
+        },
+        {
+          "from": 100.6,
+          "to": 102.8
+        },
+        {
+          "from": 102.8,
+          "to": 106.5
+        },
+        {
+          "from": 15.2,
+          "to": 17.3
+        },
+        {
+          "from": 27.6,
+          "to": 34.4
+        },
+        {
+          "from": 108.1,
+          "to": 114.1
+        },
+        {
+          "from": 116.8,
+          "to": 120.6
+        }
+      ],
+      "hud": [
+        {
+          "from": 21.0,
+          "to": 23.4,
+          "text": "AUDIENCE: LAUGHING"
+        }
+      ],
+      "note": "'billion dollar settlement says otherwise'",
+      "in": 92.5,
+      "out": 96.7
+    },
+    {
+      "src": "clips/powell_cspan.mp4",
+      "look": "cyber",
+      "crop": [
+        0,
+        437,
+        720,
+        405
+      ],
+      "subs": [
+        0,
+        880,
+        720,
+        160
+      ],
+      "audio": "orig",
+      "titles": [
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "title": "Meta President Dina Powell McCormick",
+          "sub": "ALL-IN SUMMIT 2026  //  via @scrolling2death"
+        }
+      ],
+      "moods": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SERIOUS",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 8.1,
+          "to": 10.9,
+          "side": "any",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 14.6,
+          "to": 15.2,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "left",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "INCREDULOUS",
+            "STUNNED"
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "SPEECHLESS",
+            "INCREDULOUS"
+          ]
+        },
+        {
+          "from": 26.7,
+          "to": 27.6,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "left",
+          "words": [
+            "UNBOTHERED",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 62.4,
+          "to": 66.7,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 77.2,
+          "to": 82.0,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 88.5,
+          "to": 92.5,
+          "side": "any",
+          "words": [
+            "DISMISSIVE",
+            "DEFIANT"
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "side": "any",
+          "words": [
+            "INCREDULOUS",
+            "BEWILDERED"
+          ]
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "words": [
+            "DEFIANT",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "words": [
+            "STUNNED",
+            "SPEECHLESS"
+          ]
+        },
+        {
+          "from": 106.5,
+          "to": 108.1,
+          "side": "any",
+          "words": [
+            "DEFLECTING",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "left",
+          "words": [
+            "ON MESSAGE",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 114.1,
+          "to": 116.8,
+          "side": "any",
+          "words": [
+            "OBSERVING",
+            "SILENT"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "left",
+          "words": [
+            "PROUD"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        }
+      ],
+      "pins": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        }
+      ],
+      "nofaces": [
+        {
+          "from": 0,
+          "to": 1.4
+        },
+        {
+          "from": 21.0,
+          "to": 23.4
+        },
+        {
+          "from": 54.2,
+          "to": 62.4
+        },
+        {
+          "from": 86.4,
+          "to": 88.5
+        },
+        {
+          "from": 100.6,
+          "to": 102.8
+        },
+        {
+          "from": 102.8,
+          "to": 106.5
+        },
+        {
+          "from": 15.2,
+          "to": 17.3
+        },
+        {
+          "from": 27.6,
+          "to": 34.4
+        },
+        {
+          "from": 108.1,
+          "to": 114.1
+        },
+        {
+          "from": 116.8,
+          "to": 120.6
+        }
+      ],
+      "hud": [
+        {
+          "from": 21.0,
+          "to": 23.4,
+          "text": "AUDIENCE: LAUGHING"
+        }
+      ],
+      "note": "'are you done with your ten-minute question?'",
+      "in": 96.7,
+      "out": 99.0
+    },
+    {
+      "src": "clips/powell_cspan.mp4",
+      "look": "cyber",
+      "crop": [
+        0,
+        437,
+        720,
+        405
+      ],
+      "subs": [
+        0,
+        880,
+        720,
+        160
+      ],
+      "audio": "orig",
+      "titles": [
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "title": "Meta President Dina Powell McCormick",
+          "sub": "ALL-IN SUMMIT 2026  //  via @scrolling2death"
+        }
+      ],
+      "moods": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SERIOUS",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 8.1,
+          "to": 10.9,
+          "side": "any",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 14.6,
+          "to": 15.2,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "left",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "INCREDULOUS",
+            "STUNNED"
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "SPEECHLESS",
+            "INCREDULOUS"
+          ]
+        },
+        {
+          "from": 26.7,
+          "to": 27.6,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "left",
+          "words": [
+            "UNBOTHERED",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 62.4,
+          "to": 66.7,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 77.2,
+          "to": 82.0,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 88.5,
+          "to": 92.5,
+          "side": "any",
+          "words": [
+            "DISMISSIVE",
+            "DEFIANT"
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "side": "any",
+          "words": [
+            "INCREDULOUS",
+            "BEWILDERED"
+          ]
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "words": [
+            "DEFIANT",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "words": [
+            "STUNNED",
+            "SPEECHLESS"
+          ]
+        },
+        {
+          "from": 106.5,
+          "to": 108.1,
+          "side": "any",
+          "words": [
+            "DEFLECTING",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "left",
+          "words": [
+            "ON MESSAGE",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 114.1,
+          "to": 116.8,
+          "side": "any",
+          "words": [
+            "OBSERVING",
+            "SILENT"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "left",
+          "words": [
+            "PROUD"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        }
+      ],
+      "pins": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        }
+      ],
+      "nofaces": [
+        {
+          "from": 0,
+          "to": 1.4
+        },
+        {
+          "from": 21.0,
+          "to": 23.4
+        },
+        {
+          "from": 54.2,
+          "to": 62.4
+        },
+        {
+          "from": 86.4,
+          "to": 88.5
+        },
+        {
+          "from": 100.6,
+          "to": 102.8
+        },
+        {
+          "from": 102.8,
+          "to": 106.5
+        },
+        {
+          "from": 15.2,
+          "to": 17.3
+        },
+        {
+          "from": 27.6,
+          "to": 34.4
+        },
+        {
+          "from": 108.1,
+          "to": 114.1
+        },
+        {
+          "from": 116.8,
+          "to": 120.6
+        }
+      ],
+      "hud": [
+        {
+          "from": 21.0,
+          "to": 23.4,
+          "text": "AUDIENCE: LAUGHING"
+        }
+      ],
+      "note": "'um okay'",
+      "in": 99.0,
+      "out": 100.6
+    },
+    {
+      "src": "clips/powell_cspan.mp4",
+      "look": "cyber",
+      "crop": [
+        0,
+        437,
+        720,
+        405
+      ],
+      "subs": [
+        0,
+        880,
+        720,
+        160
+      ],
+      "audio": "orig",
+      "titles": [
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "title": "Meta President Dina Powell McCormick",
+          "sub": "ALL-IN SUMMIT 2026  //  via @scrolling2death"
+        }
+      ],
+      "moods": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SERIOUS",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 8.1,
+          "to": 10.9,
+          "side": "any",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 10.9,
+          "to": 14.6,
+          "side": "any",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 14.6,
+          "to": 15.2,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "left",
+          "words": [
+            "AMUSED",
+            "HYSTERICAL"
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "INCREDULOUS",
+            "STUNNED"
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "side": "any",
+          "words": [
+            "BEWILDERED",
+            "SPEECHLESS",
+            "INCREDULOUS"
+          ]
+        },
+        {
+          "from": 26.7,
+          "to": 27.6,
+          "side": "any",
+          "words": [
+            "AMUSED"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "left",
+          "words": [
+            "UNBOTHERED",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 62.4,
+          "to": 66.7,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "POINTED",
+            "SERIOUS"
+          ]
+        },
+        {
+          "from": 77.2,
+          "to": 82.0,
+          "side": "any",
+          "words": [
+            "UNBOTHERED",
+            "UNMOVED"
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "side": "any",
+          "words": [
+            "PRESSING",
+            "SINCERE"
+          ]
+        },
+        {
+          "from": 88.5,
+          "to": 92.5,
+          "side": "any",
+          "words": [
+            "DISMISSIVE",
+            "DEFIANT"
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "side": "any",
+          "words": [
+            "INCREDULOUS",
+            "BEWILDERED"
+          ]
+        },
+        {
+          "from": 96.7,
+          "to": 99.0,
+          "side": "any",
+          "words": [
+            "DEFIANT",
+            "DISMISSIVE"
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "side": "any",
+          "words": [
+            "STUNNED",
+            "SPEECHLESS"
+          ]
+        },
+        {
+          "from": 106.5,
+          "to": 108.1,
+          "side": "any",
+          "words": [
+            "DEFLECTING",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "left",
+          "words": [
+            "ON MESSAGE",
+            "UNBOTHERED"
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        },
+        {
+          "from": 114.1,
+          "to": 116.8,
+          "side": "any",
+          "words": [
+            "OBSERVING",
+            "SILENT"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "left",
+          "words": [
+            "PROUD"
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "side": "right",
+          "words": [
+            "OBSERVING"
+          ]
+        }
+      ],
+      "pins": [
+        {
+          "from": 1.4,
+          "to": 8.1,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 17.3,
+          "to": 21.0,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 23.4,
+          "to": 26.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 34.4,
+          "to": 54.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 66.7,
+          "to": 77.2,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 82.0,
+          "to": 86.4,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 92.5,
+          "to": 96.7,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 99.0,
+          "to": 100.6,
+          "rect": [
+            0.38,
+            0.0,
+            0.4,
+            0.55
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 15.2,
+          "to": 17.3,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 27.6,
+          "to": 34.4,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 108.1,
+          "to": 114.1,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.12,
+            0.08,
+            0.22,
+            0.38
+          ]
+        },
+        {
+          "from": 116.8,
+          "to": 120.6,
+          "rect": [
+            0.62,
+            0.08,
+            0.22,
+            0.38
+          ]
+        }
+      ],
+      "nofaces": [
+        {
+          "from": 0,
+          "to": 1.4
+        },
+        {
+          "from": 21.0,
+          "to": 23.4
+        },
+        {
+          "from": 54.2,
+          "to": 62.4
+        },
+        {
+          "from": 86.4,
+          "to": 88.5
+        },
+        {
+          "from": 100.6,
+          "to": 102.8
+        },
+        {
+          "from": 102.8,
+          "to": 106.5
+        },
+        {
+          "from": 15.2,
+          "to": 17.3
+        },
+        {
+          "from": 27.6,
+          "to": 34.4
+        },
+        {
+          "from": 108.1,
+          "to": 114.1
+        },
+        {
+          "from": 116.8,
+          "to": 120.6
+        }
+      ],
+      "hud": [
+        {
+          "from": 21.0,
+          "to": 23.4,
+          "text": "AUDIENCE: LAUGHING"
+        }
+      ],
+      "note": "'couldn't be more proud of the agreement'",
+      "in": 114.1,
+      "out": 120.6
+    }
+  ],
+  "logo": "assets/logo_ingot.png"
+}

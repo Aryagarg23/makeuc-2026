@@ -1,0 +1,26 @@
+{
+  "segments": [
+    {"note": "1 cold open", "card": {"type": "title", "text": "what if you could edit your reflexes?", "style": "dedsec"},
+     "dur": 3, "look": "dedsec",
+     "vo": {"tts": "In a future where people can control their subconscious response to what they see. What does that world look like?", "speaker": "Zarvox"}},
+    {"note": "2 settlement card", "card": {"type": "headline", "style": "dedsec",
+      "text": "Meta to pay up to $18B to settle states' claims it designed apps to addict kids",
+      "source": "Reuters / AP, Aug 26 2026"}, "dur": 4, "look": "dedsec"},
+    {"note": "4 solutions don't go nuclear (stand-in clip)", "src": "work/test.mp4", "in": 0, "out": 5,
+     "look": "kids", "audio": "meme+echo"},
+    {"note": "9 software map", "card": {"type": "software_map"}, "dur": 4,
+     "look": "clean"},
+    {"note": "9 wiring", "card": {"type": "image", "path": "../gvs/pictures/full_front.png",
+      "caption": "2 mA cap. Auto-off in 1 s if the link drops. Never on a charging laptop."}, "dur": 4, "look": "clean"},
+    {"note": "9 citations", "card": {"type": "citations", "heading": "How it works", "items": [
+      "Liu, Suzuki, Fushimi & Ochiai (2025). Design and evaluation of a voltage-controlled current source for galvanic vestibular stimulation research. HardwareX 22, e00647.",
+      "Garcia & Koelling (1966). Relation of cue to consequence in avoidance learning. Psychonomic Science 4, 123-124.",
+      "Azrin, Holz & Hake (1963). Fixed-ratio punishment. Journal of the Experimental Analysis of Behavior 6, 141-148.",
+      "Bikson et al. (2016). Safety of transcranial direct current stimulation: evidence based update 2016. Brain Stimulation 9, 641-661."]},
+     "dur": 5, "look": "clean"},
+    {"note": "10 results", "card": {"type": "results", "lines": ["Nauseous since 3:30 a.m.", "4 friends felt it with me",
+      "3 friends drove me like an RC car"]}, "dur": 4, "look": "clean"},
+    {"note": "10 sting", "card": {"type": "title", "text": "edit your reflexes", "style": "dedsec"}, "dur": 2,
+     "look": "dedsec", "vo": {"tts": "Edit your reflexes.", "speaker": "Trinoids"}}
+  ]
+}
