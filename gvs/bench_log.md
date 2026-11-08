@@ -29,3 +29,27 @@ Each run uses a 2.2 kΩ dummy load across the electrode leads, with nobody attac
 - With 0 mA commanded, the board read 0.25–0.28 mA, though no current was flowing. Taken together with the rows above, the uncorrected board reading follows **raw = 0.27 + 0.88 × true** in mA, so the error was in the measurement, not the output.
 - The firmware now reports `meas_ma` with that correction. The overcurrent trip (2.3 mA) still uses the uncorrected reading, which runs at or above the true current up to about 2.25 mA.
 - The meter reading at 0 mA commanded was not recorded.
+
+## 2026-11-07, first on-head session (BLE, USB unplugged, Mac on battery)
+
+Pads were placed on the mastoids. The kill switch had been removed; the plan was to pull a pad to stop.
+
+| Time | Pulse | Felt |
+|---|---|---|
+| 22:48 | 0.5 mA, 1 Hz sine, 2 s | tingle |
+| 22:49 | 0.75 mA, 1 Hz sine, 2 s | tingle |
+| 22:49 | 1.0 mA, 1 Hz sine, 2 s | more tingle |
+| 22:51 | 0.5 mA, 1/3 Hz sine, 3 s (pads moved) | (not reported) |
+| 22:53–22:58 | DC 3 s at 1.0, 1.0, 1.25, 1.5, 1.5 mA, alternating sides | minor tingle |
+| 23:04 | 1.0 mA DC (wire now cut into the pad's carbon layer) | stronger tingle |
+| 23:12 | 1.0 mA DC (pads moved per diagram) | hurts a little / unusual |
+| 23:13 | 1.25 mA DC | no balance change |
+| 23:15 | 1.5 mA DC | hurts, on top of the skin; session stopped |
+
+- **No vestibular effect at any level.** The board held the commanded current on every pulse, and there were no faults.
+- **Likely cause: the electrode connection.** The pads have 2 mm female pin sockets. A bare wire was pushed into, then cut into, the carbon layer, so current reached the skin at a few points. That gives skin sensation, then pain, without enough current reaching the vestibular nerve.
+- **Next session:**
+  - Fresh pads, connected by 2 mm male pins (TENS lead wires or a tinned wire pin).
+  - Check gel-to-gel resistance first: under about 1 kΩ, steady when the pins are wiggled.
+  - During a 1.0 mA pulse, check that the voltage across the pads is 1–5 V.
+  - Restart at 0.5 mA.

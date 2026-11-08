@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="Helvetica, Arial, sans-serif">
+  <rect width="900" height="520" fill="#ffffff"/>
+  <text x="450" y="38" text-anchor="middle" font-size="24" font-weight="bold" fill="#111">GVS pad placement: on the mastoid bone, both sides</text>
+
+  <!-- SIDE VIEW -->
+  <text x="230" y="78" text-anchor="middle" font-size="18" fill="#333">Side view (right side of head)</text>
+  <!-- head outline facing right -->
+  <path d="M120,300 C110,190 170,110 270,105 C360,100 405,165 410,225 L428,262 L412,272 L415,300 L405,312 L410,330 C405,355 385,365 360,362 L345,420 L200,420 L205,370 C150,355 125,335 120,300 Z" fill="#f3dcc8" stroke="#6b4f3a" stroke-width="3"/>
+  <!-- hair -->
+  <path d="M120,300 C110,190 170,110 270,105 C330,102 372,130 392,170 C330,150 250,150 190,190 C160,215 150,260 150,300 Z" fill="#5a4636" opacity="0.85"/>
+  <!-- eye -->
+  <ellipse cx="372" cy="225" rx="9" ry="5" fill="#333"/>
+  <!-- ear -->
+  <path d="M258,232 C238,232 230,258 232,282 C234,305 246,318 262,316 C276,314 280,298 276,286 C272,272 280,262 278,248 C276,238 268,232 258,232 Z" fill="#e8c4a8" stroke="#6b4f3a" stroke-width="2.5"/>
+  <circle cx="262" cy="272" r="5" fill="#6b4f3a"/>
+  <text x="282" y="300" font-size="12" fill="#6b4f3a">ear</text>
+  <!-- mastoid bump -->
+  <ellipse cx="226" cy="318" rx="16" ry="20" fill="none" stroke="#9a7a60" stroke-width="2" stroke-dasharray="4 3"/>
+  <!-- pad -->
+  <circle cx="222" cy="316" r="24" fill="#2f80ed" fill-opacity="0.55" stroke="#1b5fbf" stroke-width="3"/>
+  <line x1="222" y1="340" x2="205" y2="470" stroke="#d64545" stroke-width="3"/>
+  <text x="120" y="490" font-size="14" fill="#d64545">wire to the board</text>
+  <!-- callout -->
+  <line x1="198" y1="310" x2="110" y2="268" stroke="#1b5fbf" stroke-width="2"/>
+  <text x="12" y="205" font-size="15" font-weight="bold" fill="#1b5fbf">PAD HERE</text>
+  <text x="12" y="223" font-size="13" fill="#333">hard bony bump right</text>
+  <text x="12" y="239" font-size="13" fill="#333">behind the earlobe</text>
+  <!-- wrong zones -->
+  <text x="160" y="400" font-size="13" fill="#b00020">✗ not on the neck</text>
+  <text x="190" y="150" font-size="13" fill="#ffffff">✗ not in the hair</text>
+
+  <!-- BACK VIEW -->
+  <text x="680" y="78" text-anchor="middle" font-size="18" fill="#333">Back view</text>
+  <ellipse cx="680" cy="250" rx="125" ry="150" fill="#5a4636" stroke="#3d2f24" stroke-width="3"/>
+  <!-- ears -->
+  <ellipse cx="552" cy="270" rx="18" ry="38" fill="#e8c4a8" stroke="#6b4f3a" stroke-width="2.5"/>
+  <ellipse cx="808" cy="270" rx="18" ry="38" fill="#e8c4a8" stroke="#6b4f3a" stroke-width="2.5"/>
+  <!-- neck -->
+  <path d="M620,385 L615,470 L745,470 L740,385 Z" fill="#f3dcc8" stroke="#6b4f3a" stroke-width="3"/>
+  <!-- skin patches behind ears -->
+  <ellipse cx="582" cy="318" rx="26" ry="30" fill="#f3dcc8"/>
+  <ellipse cx="778" cy="318" rx="26" ry="30" fill="#f3dcc8"/>
+  <!-- pads -->
+  <circle cx="584" cy="318" r="22" fill="#2f80ed" fill-opacity="0.6" stroke="#1b5fbf" stroke-width="3"/>
+  <circle cx="776" cy="318" r="22" fill="#2f80ed" fill-opacity="0.6" stroke="#1b5fbf" stroke-width="3"/>
+  <text x="584" y="323" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">L</text>
+  <text x="776" y="323" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">R</text>
+  <!-- same height line -->
+  <line x1="556" y1="352" x2="804" y2="352" stroke="#333" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="680" y="380" text-anchor="middle" font-size="13" fill="#ffffff">same height both sides</text>
+  <text x="680" y="488" text-anchor="middle" font-size="13" fill="#333">pads must not touch each other or join with gel around the neck</text>
+
+  <text x="450" y="512" text-anchor="middle" font-size="12" fill="#666">Find it: put a finger on your earlobe, slide straight back ~1-2 cm onto the hard bone. Pad ~3-4 cm across, centred there, on bare skin.</text>
+</svg>
