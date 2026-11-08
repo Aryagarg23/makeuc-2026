@@ -1,10 +1,10 @@
 # Debug: tingle but no sway (2026-11-07)
 
-The first on-head session ran 1.0–1.5 mA (`bench_log.md`). The skin sensation grew and turned into pain, but there was never any lean. This page compares our circuit against the published builds and lists checks in order, cheapest first.
+The first on-head session ran 1.0–1.5 mA (`bench_log.md`). The skin sensation grew and turned into pain, but there was never any lean. This page compares my circuit against the published builds and lists checks in order, cheapest first.
 
-## Our circuit vs published GVS stimulators
+## My circuit vs published GVS stimulators
 
-| | Ours (`HANDOFF.md`) | Liu et al. 2025, HardwareX ([PMC12019011](https://pmc.ncbi.nlm.nih.gov/articles/PMC12019011/)) | Hobby builds ([xsimulator thread](https://www.xsimulator.net/community/threads/solid-state-motion-simulator-gvs.16213/)) |
+| | Mine (`HANDOFF.md`) | Liu et al. 2025, HardwareX ([PMC12019011](https://pmc.ncbi.nlm.nih.gov/articles/PMC12019011/)) | Hobby builds ([xsimulator thread](https://www.xsimulator.net/community/threads/solid-state-motion-simulator-gvs.16213/)) |
 |---|---|---|---|
 | Topology | LM358 + 2N3904 sink, one direction; two relays swap which electrode is on top | Enhanced Howland current source, truly bipolar | Current limiter + H-bridge |
 | Supply | DIY boost, measured 17–19 V under load at 1–2 mA | MT3608 boost; needs at least 20.4 V, run at 24.6 V | 2×9 V, later 24 V |
@@ -14,7 +14,7 @@ The first on-head session ran 1.0–1.5 mA (`bench_log.md`). The skin sensation 
 | Head + electrode resistance | not measured yet | 0.8–3 kΩ (their calibration loads: 1481, 2663, 3850 Ω) | — |
 | Effect seen | tingle, then pain; no lean up to 1.5 mA | tilt perceived; just-noticeable difference 0.74 ± 0.38 mA | head "pulled like a magnet" at 2.5–4 mA; **only noticed standing, not seated** |
 
-**How much head resistance we can drive.** This is arithmetic from our measured supply, not a measurement on a head:
+**How much head resistance the board can drive.** This is arithmetic from my measured supply, not a measurement on a head:
 
 | Current | Supply under load | Largest head + electrode resistance that still gets the full current |
 |---|---|---|
@@ -58,7 +58,7 @@ C is the measurement the board itself can't make. If C reads low while the board
 1. **A true load-current reading.** Add a divider from TOP to a free ADC1 pin, so firmware can compute (HV − V_TOP) / 2.2 kΩ, or one from BOTTOM, to see Q2 saturating. Firmware could then fault on "compliance lost" and on open electrodes, which today read as normal.
    - The only free ADC1 pin is **D0 = GPIO2, which is an ESP32-C3 boot strapping pin**. Check its required level at reset in the C3 datasheet before adding a divider to ground there. Not verified here.
    - Alternative: an INA219 on I2C, as Liu did. But D4/D5, the default I2C pins, already drive the relays.
-2. **More headroom**, only if B shows you need it. Lowering the 2.2 kΩ top resistor raises the resistance we can drive. It also raises the fault current if Q2 shorts: 24 V / (R_top + 1.1 kΩ) is 7.3 mA today and would be 11 mA with 1 kΩ. Keep the 2.2 kΩ unless B reads above about 8 V at 1.5 mA.
+2. **More headroom**, only if B shows you need it. Lowering the 2.2 kΩ top resistor raises the resistance the board can drive. It also raises the fault current if Q2 shorts: 24 V / (R_top + 1.1 kΩ) is 7.3 mA today and would be 11 mA with 1 kΩ. Keep the 2.2 kΩ unless B reads above about 8 V at 1.5 mA.
 3. The boost tops out at about 21–23 V open and 17 V at 2 mA, because `BOOST_MAX_PCT` is 45%. Raising that cap is a separate firmware and heat decision. Don't change it until A–D are done.
 
 ## Not verified

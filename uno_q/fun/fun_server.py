@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fun mode on the UNO Q: a steering website on its own WiFi hotspot, driving the GVS over Bluetooth.
 
-People join the hotspot (password CHANGE_ME_hotspot), open http://10.42.0.1:8080/ and steer the tilt with
+People join the hotspot (its password is in uno_q/fun/hotspot_pass), open http://10.42.0.1:8080/ and steer the tilt with
 the same page as the Mac relay (gvs/tools/live.html). This server:
   /            the page
   /live?ma=x   fire-and-forget live update (BLE write without response), also drawn on the LED matrix

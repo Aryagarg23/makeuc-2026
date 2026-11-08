@@ -4,11 +4,11 @@
 
 The device is a small battery-powered **current source** with two electrodes, one behind each ear. It sets a current, not a voltage, so the current stays the same when the electrode contact changes, until the supply runs out of voltage. A microcontroller sets the current, picks which electrode is positive, and watches the result.
 
-![Schematic of the GVS board](figures/schematic.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="figures/schematic-dark.svg"><img alt="Schematic of the GVS board" src="figures/schematic.svg"></picture>
 
 *Schematic as built. Drawn from the soldered layout (`gvs/board/layout.py`), which also feeds the SPICE model (`gvs/board/sim.py`). Regenerate it with `python3 docs/figures/schematic.py docs/figures`.*
 
-![Wiring block diagram](figures/wiring.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="figures/wiring-dark.svg"><img alt="Wiring block diagram" src="figures/wiring.svg"></picture>
 
 *The same board as blocks, with the limits the firmware enforces.*
 
@@ -80,14 +80,16 @@ The Tripler has three 20-column sections. Column 4 is the HV bus on every sectio
 | **S2 (middle)** | the XIAO in the header rows (USB-C pointing right, off the column-20 edge), Q2, the 1.1 kΩ sense resistors, the readback divider, the 2.2 kΩ TOP resistor |
 | **S3 (bottom)** | the LM358 and its input network (the SET filter, feedback and base resistors, the 104 and 103 capacitors). Relay 2 plugs in at column 20 |
 
-The pictures in [`gvs/pictures/`](../gvs/pictures) show every part, bridge and wire:
-- `full_front.png`: the whole board, front
+The older pictures in [`gvs/pictures/`](../gvs/pictures) are kept for the build guide:
+- `full_front.png`: the whole board, front (superseded by the SVG below)
 - `S1_front.png`, `S2_front.png`, `S3_front.png`: each section, front
 - `S1_back.png`, `S2_back.png`, `S3_back.png`: the bridges on the back
 - `test_points.png` and `probe_steps.png`: where to put the meter probes
 - `electrode_placement.png` (and `.svg`): where the pads go behind the ears
 
-![Front of the perfboard](../gvs/pictures/full_front.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="figures/perfboard-dark.svg"><img alt="Front of the perfboard, every part and jumper" src="figures/perfboard.svg"></picture>
+
+*The perfboard as built, redrawn as a clean SVG from `gvs/board/layout.py` (`python3 docs/figures/perfboard.py docs/figures`). It replaces the old raster handoff picture, which is still in `gvs/pictures/`.*
 
 The exact hole-by-hole layout is in `gvs/board/layout.py`, and `python3 gvs/board/check.py` checks every net. The long insulated jumpers:
 

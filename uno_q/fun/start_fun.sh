@@ -1,5 +1,5 @@
 #!/bin/sh
-# Fun mode: the UNO Q runs WiFi hotspot "arya-gvs" (password CHANGE_ME_hotspot) and serves the steering page at
+# Fun mode: the UNO Q runs WiFi hotspot "arya-gvs" (random password in uno_q/fun/hotspot_pass, git-ignored) and serves the steering page at
 # http://10.42.0.1:8080/, driving the GVS board over Bluetooth itself. Run on the Mac with the UNO Q on USB.
 #
 #   uno_q/fun/start_fun.sh          start (or restart) fun mode
@@ -15,6 +15,9 @@ SER=$(adb devices | awk '$2=="device"{print $1; exit}')
 [ -n "$SER" ] || { echo "UNO Q not found on adb"; exit 1; }
 A="adb -s $SER"
 D=/home/arduino/gvs
+# Whoever joins this hotspot can steer the wearer, so the password is random, made once, and never committed.
+[ -f hotspot_pass ] || { umask 077; openssl rand -hex 6 > hotspot_pass; }
+PASS=$(cat hotspot_pass)
 
 stop_all() {
   $A shell "pkill -f '[g]vs/supervise.sh'; pkill -f '^python3 fun_server.py'; nmcli con down Hotspot >/dev/null 2>&1; true"
@@ -37,7 +40,7 @@ if ! $A shell "test -d $D/lib/bleak"; then
   done
 fi
 
-$A shell "nmcli dev wifi hotspot ifname wlan0 ssid arya-gvs password CHANGE_ME_hotspot band bg >/dev/null && nmcli -t -f IP4.ADDRESS dev show wlan0"
+$A shell "nmcli dev wifi hotspot ifname wlan0 ssid arya-gvs password $PASS band bg >/dev/null && nmcli -t -f IP4.ADDRESS dev show wlan0"
 
 
 # The supervisor keeps fun_server.py running (restart within 2 s if it dies); cron starts it at boot too.
@@ -45,5 +48,5 @@ $A shell "setsid nohup sh $D/supervise.sh now < /dev/null > $D/boot.log 2>&1 &"
 sleep 12
 $A shell "tail -3 $D/fun.log"
 $A forward tcp:8080 tcp:8080 >/dev/null
-echo "fun mode: join WiFi 'arya-gvs' (password CHANGE_ME_hotspot) and open http://10.42.0.1:8080/"
+echo "fun mode: join WiFi 'arya-gvs' (password: $PASS) and open http://10.42.0.1:8080/"
 echo "          or on this Mac: http://127.0.0.1:8080/"

@@ -2,7 +2,7 @@
 
 > **DANGER. Wrong wiring on this board can put the wrong current through your head.** Read [SAFETY.md](SAFETY.md) and check every connection with the tests in [BUILD.md](BUILD.md) before an electrode touches skin.
 
-![XIAO ESP32-C3 pinout as used](figures/pinout.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="figures/pinout-dark.svg"><img alt="XIAO ESP32-C3 pinout as used" src="figures/pinout.svg"></picture>
 
 ## XIAO ESP32-C3
 

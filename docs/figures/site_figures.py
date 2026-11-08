@@ -1,6 +1,6 @@
 """The two figures for the HVAC writeup on aryagarg23.com: the wiring diagram and the software map.
 
-  python3 docs/figures/site_figures.py OUT_DIR      writes wiring.svg and software.svg
+  python3 docs/figures/site_figures.py OUT_DIR      writes wiring.svg, software.svg and their -dark.svg twins
 
 Print register of the site's design system: cream ground, ink hairlines, blue for signal paths, hot
 for the current path and the warning. Facts come from gvs/HANDOFF.md, gvs/README.md, pipeline/README.md
@@ -12,6 +12,17 @@ import sys
 from pathlib import Path
 
 PAPER, INK, MUTED, RULE, BLUE, HOT = "#eae4d6", "#282215", "#6b6250", "#c6b99f", "#3b42db", "#e85b30"
+
+# Light is the site's cream paper; dark is its stone ground (frontend/src/styles/moodboard/tokens.css).
+THEMES = {"light": ("#eae4d6", "#282215", "#6b6250", "#c6b99f", "#3b42db", "#e85b30"),
+          "dark": ("#1c1c1c", "#f1ede4", "#a39b8a", "#3a3a3a", "#6f76ec", "#d95526")}
+SUF = ""
+
+
+def use(theme: str) -> None:
+    global PAPER, INK, MUTED, RULE, BLUE, HOT, SUF
+    PAPER, INK, MUTED, RULE, BLUE, HOT = THEMES[theme]
+    SUF = "" if theme == "light" else "-dark"
 FONT = "Space Grotesk, Inter, system-ui, sans-serif"
 
 
@@ -19,7 +30,9 @@ class Svg:
     def __init__(self, w: int, h: int) -> None:
         self.w, self.h, self.parts = w, h, []
 
-    def box(self, x, y, w, h, lines, stroke=INK, title_fill=INK, dash=False, sw=1):
+    def box(self, x, y, w, h, lines, stroke=None, title_fill=None, dash=False, sw=1):
+        stroke = stroke or INK
+        title_fill = title_fill or INK
         d = ' stroke-dasharray="4 4"' if dash else ""
         self.parts.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{PAPER}" stroke="{stroke}" stroke-width="{sw}"{d}/>')
         ty = y + 22
@@ -29,13 +42,16 @@ class Svg:
             ty += 18 if i == 0 else 16
         return x, y, w, h
 
-    def text(self, x, y, s, size=12, fill=MUTED, anchor="start", weight=400):
+    def text(self, x, y, s, size=12, fill=None, anchor="start", weight=400):
+        fill = fill or MUTED
         self.parts.append(f'<text x="{x}" y="{y}" font-size="{size}" font-weight="{weight}" fill="{fill}" text-anchor="{anchor}">{esc(s)}</text>')
 
-    def label(self, x, y, s, fill=MUTED):
+    def label(self, x, y, s, fill=None):
+        fill = fill or MUTED
         self.parts.append(f'<text x="{x}" y="{y}" font-size="10.5" letter-spacing="1.4" fill="{fill}">{esc(s.upper())}</text>')
 
-    def arrow(self, pts, color=INK, label=None, lx=None, ly=None, dash=False):
+    def arrow(self, pts, color=None, label=None, lx=None, ly=None, dash=False):
+        color = color or INK
         d = ' stroke-dasharray="4 4"' if dash else ""
         p = " ".join(f"{x},{y}" for x, y in pts)
         m = {INK: "ink", BLUE: "blue", HOT: "hot"}[color]
@@ -44,7 +60,8 @@ class Svg:
             x, y = (lx, ly) if lx is not None else ((pts[0][0] + pts[-1][0]) / 2, (pts[0][1] + pts[-1][1]) / 2 - 6)
             self.parts.append(f'<text x="{x}" y="{y}" font-size="11" fill="{color}" text-anchor="middle">{esc(label)}</text>')
 
-    def line(self, pts, color=INK, dash=False, sw=1.2):
+    def line(self, pts, color=None, dash=False, sw=1.2):
+        color = color or INK
         d = ' stroke-dasharray="4 4"' if dash else ""
         p = " ".join(f"{x},{y}" for x, y in pts)
         self.parts.append(f'<polyline points="{p}" fill="none" stroke="{color}" stroke-width="{sw}"{d}/>')
@@ -113,7 +130,7 @@ def wiring(out: Path) -> None:
                                "HV cutoff 28 V (3 readings) · current readback trip",
                                "PWM must attach or the board faults at boot",
                                "token on every command · dead-man 1 s in live mode"])
-    s.write(out / "wiring.svg", "HVAC wiring diagram: battery, XIAO ESP32-C3, boost converter, current sink, two relays, kill switch, two electrodes")
+    s.write(out / f"wiring{SUF}.svg", "HVAC wiring diagram: battery, XIAO ESP32-C3, boost converter, current sink, two relays, kill switch, two electrodes")
 
 
 def software(out: Path) -> None:
@@ -160,15 +177,17 @@ def software(out: Path) -> None:
     s.arrow([(205, 500), (205, 480), (580, 480), (580, 274)], dash=True)
     s.box(400, 500, 580, 104, ["Fun mode (the same board, a different driver)", "UNO Q hotspot arya-gvs → friends open a page on their phones → tilt slider", "UNO Q sends live mA over Bluetooth at 10 Hz; 0 mA after 1.5 s of silence (dead-man)", "the UNO Q LED matrix shows the tilt; the firmware's caps still apply"])
     s.arrow([(980, 552), (990, 552), (990, 430), (980, 430)], BLUE)
-    s.write(out / "software.svg", "HVAC software map: traffic from your devices to packet lines, the pipeline's names, windows, classify, rules, trigger and intensity, Bluetooth to the firmware and electrodes; TRIBE v2 at enrollment; fun mode")
+    s.write(out / f"software{SUF}.svg", "HVAC software map: traffic from your devices to packet lines, the pipeline's names, windows, classify, rules, trigger and intensity, Bluetooth to the firmware and electrodes; TRIBE v2 at enrollment; fun mode")
 
 
 def main() -> int:
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
-    wiring(out)
-    software(out)
-    print(f"wrote {out}/wiring.svg {out}/software.svg")
+    for theme in THEMES:
+        use(theme)
+        wiring(out)
+        software(out)
+    print(f"wrote wiring and software, light and dark, in {out}")
     return 0
 
 

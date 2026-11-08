@@ -46,7 +46,7 @@ Powered by a 3.7 V 250 mAh LiPo soldered permanently to the XIAO BAT pads.
 ## Open items / next steps (in order)
 1. **Relay LEDs are both ON right now.** Figure out whether that's the module's power LED
    (normal once + has power) or the relays actually energized (a click; the COM↔NO terminals beep).
-   - If they're energized at idle with our firmware running: set `RELAY_ACTIVE_LOW = true`.
+   - If they're energized at idle with my firmware running: set `RELAY_ACTIVE_LOW = true`.
    - Before flashing, the old sketch on the XIAO may be driving D4/D5, so don't judge until after the flash.
    - No electrodes attached, so this is harmless for now.
 2. **Flash the firmware** (`firmware/gvs_controller/gvs_controller.ino`).

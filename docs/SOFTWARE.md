@@ -2,9 +2,9 @@
 
 > **DANGER. The software decides when current goes through your head.** Its limits are real, but the firmware's are the ones that count. See [SAFETY.md](SAFETY.md).
 
-![Software map](figures/software.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="figures/software-dark.svg"><img alt="Software map" src="figures/software.svg"></picture>
 
-*Regenerate the figures with `python3 docs/figures/site_figures.py docs/figures`.*
+*Regenerate the figures with `python3 docs/figures/site_figures.py docs/figures`. Every figure has a `-dark.svg` twin, which GitHub shows in dark mode.*
 
 ## The path of one stimulus
 

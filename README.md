@@ -4,7 +4,7 @@
 > **This device passes electric current through your head. It can cause permanent damage.**
 > It is a hackathon prototype (MakeUC 2026), not a medical device. Nobody has certified or reviewed it, and it comes with no warranty. If you build or run any of it, you are responsible for what happens to you and to anyone else. **Read [docs/SAFETY.md](docs/SAFETY.md) before you build, flash or wear anything.** Do not use it with epilepsy, an implant, a heart condition, a balance disorder, pregnancy, or irritated skin, and never while the board or the laptop is on a charger.
 
-I wanted to see if I could make myself hate opening an app. We built a headband for it.
+I wanted to see if I could make myself hate opening an app. I built a headband for it.
 
 HVAC stands for Human Vestibular Aversion Conditioner. You pick what you want it to catch. When you do that thing, the headband makes you feel like you're tipping over. An electrode behind each ear sends a small current (never above 2.0 mA) that tips your sense of balance. It keeps doing it for as long as the app stays open.
 
@@ -26,7 +26,7 @@ devices on Tailscale → UNO Q → tshark packet lines → name the flows → 3 
 - **Software:** the UNO Q captures packets and runs a pure-Python classifier. To teach it what to catch, you record two minutes of whatever you want punished. TRIBE v2 can lower how strongly a category fires. A dashboard on the UNO Q lets you set each app to Nauseate, Never or Auto. [docs/SOFTWARE.md](docs/SOFTWARE.md)
 - **Safety by design:** the firmware caps the current at 2.0 mA, a pulse at 3 s, a pulse every 5 s, 30 pulses an hour and 30 minutes of live current an hour. The software can't ask for more. [docs/SAFETY.md](docs/SAFETY.md)
 
-![Schematic](docs/figures/schematic.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/figures/schematic-dark.svg"><img alt="Schematic" src="docs/figures/schematic.svg"></picture>
 
 ## Status
 

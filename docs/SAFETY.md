@@ -18,9 +18,9 @@ Any of these means no:
 - alcohol, or anything that affects balance, in the last 24 hours
 - you are under 18 or the person wearing it has not agreed
 
-All but the last item come from the sources in [`research/gvs.md`](../research/gvs.md) section 4 (the last item is ours). It is a self-experimenter's list, not medical advice. Nobody screened the people who tried this build.
+All but the last item come from the sources in [`research/gvs.md`](../research/gvs.md) section 4 (the last item is mine). It is a self-experimenter's list, not medical advice. Nobody screened the people who tried this build.
 
-## Rules we followed, and you must too
+## Rules I followed, and you must too
 
 1. **Battery only.** Never wear the electrodes while the laptop is on its charger, while the board is on USB to anything on wall power, or while the board runs from a wall supply. See "The charger path" below.
 2. **Dummy load first.** Every test in [TESTING.md](TESTING.md) with a 2.2 kΩ resistor across the electrode leads and nobody attached, before the first test on a person.
@@ -37,14 +37,14 @@ The firmware enforces some of these ([limits it enforces](#what-the-firmware-lim
 
 ### On your body
 
-| What | Why | What we saw or what the sources say |
+| What | Why | What I saw or what the sources say |
 |---|---|---|
 | Burns, blisters and pain at the electrode | Current crowds into the few points that touch the skin: a dry or damaged pad, a bare wire pushed into the pad, a small contact area | **Seen.** On 2026-11-07 a bare wire cut into a pad's carbon layer. Tingle became pain at 1.0 to 1.5 mA, with no balance effect, and the session stopped (`gvs/bench_log.md`, `gvs/DEBUG.md`). |
 | Less current than you think | A dry pad, hair under the electrode or a poor contact raise the head's resistance, and the supply runs out of voltage. **The board still reports the commanded current**, because the sink holds its own emitter on target, so its reading never shows the loss | Worked out in `gvs/DEBUG.md`: with 17 V available at 2 mA, the largest head resistance that still gets the full current is about 5 kΩ. Measure across the 2.2 kΩ top resistor to see the true current. |
 | Falls and injury | The device tips your sense of balance on purpose | Standing GVS causes real sway. Anything around you becomes dangerous: stairs, roads, kitchens, ladders. |
 | Nausea, headache, visual flashes | The vestibular system and the visual system are linked, and brief GVS gives a tilt or spin sensation | Nausea in the studies needs minutes of low-frequency current, but this build repeats a burst for as long as an app stays open, and its fun mode can hold a current for much longer. The builder reports being nauseous after testing, and so was a friend who tried it. Treat that as a warning, not a result. |
 | Seizure, or effects on implants | Current through the head | These are exclusions in the literature. Nothing in this build tests for either. |
-| Lasting damage | Possible and not ruled out. Nobody has studied this device, so we cannot say it won't happen | The current is small (limit 2.0 mA). That is a limit, not a guarantee. |
+| Lasting damage | Possible and not ruled out. Nobody has studied this device, so I cannot say it won't happen | The current is small (limit 2.0 mA). That is a limit, not a guarantee. |
 
 ### In the circuit
 
@@ -65,7 +65,7 @@ The firmware enforces some of these ([limits it enforces](#what-the-firmware-lim
 | What | What happens | What limits it |
 |---|---|---|
 | The classifier fires on the wrong thing | Reels and DMs share servers. A messaging app can look like a feed. A rule can be set to the wrong app | The pipeline decides from flow shape, needs two matching windows, then rests ten seconds. You can set any app to **Never** on the dashboard, and **Pause** stops everything. No rule can ask for more than the current you set on the command line, and the firmware caps it again. |
-| **Anyone on your hotspot can steer you** | Fun mode serves a page on the UNO Q's WiFi hotspot. Whoever opens it can send current | The firmware's caps still hold (2.0 mA, a 1 s dead-man, a budget of 30 minutes of current per hour), and there is a STOP button on the page. Only let people you trust join. The hotspot name and password are in `uno_q/fun/start_fun.sh`. **Change the password.** |
+| **Anyone on your hotspot can steer you** | Fun mode serves a page on the UNO Q's WiFi hotspot. Whoever opens it can send current | The firmware's caps still hold (2.0 mA, a 1 s dead-man, a budget of 30 minutes of current per hour), and there is a STOP button on the page. Only let people you trust join. The hotspot password is random: `uno_q/fun/start_fun.sh` makes it once into `uno_q/fun/hotspot_pass` (git-ignored) and prints it. Only share it with people you trust, and delete the file to get a new one. |
 | Someone reads your traffic | The pipeline sees DNS names, TLS server names and packet sizes for every device on your network | The dashboard is locked with a key whenever it listens off localhost. Only point this at devices and networks you own. |
 | A leaked token | The firmware takes commands from anyone who has its token | `secrets.h` and `device.env` are git-ignored. Never commit them. Never leave the default token (`change-me`). |
 

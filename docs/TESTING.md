@@ -1,4 +1,4 @@
-# Testing: what we tested, how, and what it measured
+# Testing: what I tested, how, and what it measured
 
 > **DANGER. Everything on a person here carries the risks in [SAFETY.md](SAFETY.md).** The dummy-load tests come first, and every one of them had nobody attached.
 
@@ -48,7 +48,7 @@ The output was right and the board's reading was off: at 0 mA commanded it read 
 
 ## 3. Firmware bring-up finds
 
-| Date | What we found | Result |
+| Date | What I found | Result |
 |---|---|---|
 | 11-07 | At 12 and 11 bits the LEDC PWM failed to attach (`requested frequency 20000 and duty resolution 12 can not be achieved`). The set and boost PWMs never ran, so every `/pulse` would have commanded 0 mA and reported success | PWM is 10-bit. The firmware faults at boot if either PWM fails to attach |
 | 11-08 | Flat battery overnight. With no SSID the firmware kept an always-on hotspot beside BLE and flattened the 250 mAh cell. Idle HV read 2.48 V (3.75 to 3.88 V the night before) and the pulse log was cleared | With no SSID, WiFi stays off and the HTTP server does not start. The first fix crashed in `xQueueSemaphoreTake` because `WebServer` touched lwIP with WiFi off |
@@ -77,7 +77,7 @@ The board held the commanded current on every pulse and there were no faults. Th
 | C | **true current:** meter across the 2.2 kΩ top resistor during the same pulse | 2.2 V (1.0 mA). Lower means the board is overstating the current |
 | D | HV to GND during the pulse | stays above head volts + 3.3 V per mA + 0.2 V |
 
-C is the one the board can't do for itself. We have not recorded these four on a head in this log.
+C is the one the board can't do for itself. I have not recorded these four on a head in this log.
 
 ## 5. Live mode and the Mac relay (2026-11-08)
 

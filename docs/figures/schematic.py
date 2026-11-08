@@ -1,6 +1,6 @@
 """Circuit schematic and pinout figure for the GVS board, drawn from the as-built netlist.
 
-  python3 docs/figures/schematic.py docs/figures        writes schematic.svg and pinout.svg
+  python3 docs/figures/schematic.py docs/figures        writes schematic.svg, pinout.svg and their -dark.svg twins
 
 Nets come from gvs/board/layout.py (what was soldered) and gvs/HANDOFF.md, and agree with the SPICE model
 in gvs/board/sim.py, which is built from the same layout. Colours: ink = circuit, red-orange = the high
@@ -12,6 +12,17 @@ import sys
 from pathlib import Path
 
 PAPER, INK, MUTED, RULE, BLUE, HOT = "#eae4d6", "#282215", "#6b6250", "#c6b99f", "#3b42db", "#e85b30"
+
+# Light is the site's cream paper; dark is its stone ground (frontend/src/styles/moodboard/tokens.css).
+THEMES = {"light": ("#eae4d6", "#282215", "#6b6250", "#c6b99f", "#3b42db", "#e85b30"),
+          "dark": ("#1c1c1c", "#f1ede4", "#a39b8a", "#3a3a3a", "#6f76ec", "#d95526")}
+SUF = ""
+
+
+def use(theme: str) -> None:
+    global PAPER, INK, MUTED, RULE, BLUE, HOT, SUF
+    PAPER, INK, MUTED, RULE, BLUE, HOT = THEMES[theme]
+    SUF = "" if theme == "light" else "-dark"
 FONT = "Space Grotesk, Inter, system-ui, sans-serif"
 
 
@@ -19,28 +30,34 @@ class S:
     def __init__(self, w, h):
         self.w, self.h, self.o = w, h, []
 
-    def wire(self, pts, c=INK, w=1.5, dash=False):
+    def wire(self, pts, c=None, w=1.5, dash=False):
+        c = c or INK
         d = ' stroke-dasharray="5 4"' if dash else ""
         self.o.append(f'<polyline points="{" ".join(f"{x},{y}" for x, y in pts)}" fill="none" stroke="{c}" stroke-width="{w}"{d}/>')
 
-    def dot(self, x, y, c=INK):
+    def dot(self, x, y, c=None):
+        c = c or INK
         self.o.append(f'<circle cx="{x}" cy="{y}" r="3.2" fill="{c}"/>')
 
-    def text(self, x, y, s, size=12, fill=INK, anchor="start", weight=400):
+    def text(self, x, y, s, size=12, fill=None, anchor="start", weight=400):
+        fill = fill or INK
         s = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
         self.o.append(f'<text x="{x}" y="{y}" font-size="{size}" font-weight="{weight}" fill="{fill}" text-anchor="{anchor}">{s}</text>')
 
-    def label(self, x, y, s, fill=MUTED):
+    def label(self, x, y, s, fill=None):
+        fill = fill or MUTED
         self.text(x, y, s.upper(), 10.5, fill)
         self.o[-1] = self.o[-1].replace("<text ", '<text letter-spacing="1.4" ')
 
     # ---- parts: each returns its two or three pin coordinates ----
-    def res_h(self, cx, cy, lab, c=INK, above=True):
+    def res_h(self, cx, cy, lab, c=None, above=True):
+        c = c or INK
         self.o.append(f'<rect x="{cx-24}" y="{cy-7}" width="48" height="14" fill="{PAPER}" stroke="{c}" stroke-width="1.5"/>')
         self.text(cx, cy - 12 if above else cy + 22, lab, 11.5, MUTED, "middle")
         return (cx - 24, cy), (cx + 24, cy)
 
-    def res_v(self, cx, cy, lab, c=INK, side=1):
+    def res_v(self, cx, cy, lab, c=None, side=1):
+        c = c or INK
         self.o.append(f'<rect x="{cx-7}" y="{cy-24}" width="14" height="48" fill="{PAPER}" stroke="{c}" stroke-width="1.5"/>')
         self.text(cx + 14 * side, cy + 4, lab, 11.5, MUTED, "start" if side > 0 else "end")
         return (cx, cy - 24), (cx, cy + 24)
@@ -55,7 +72,8 @@ class S:
         self.text(cx, cy - 16, lab, 11.5, MUTED, "middle")
         return (cx - 4, cy), (cx + 4, cy)
 
-    def diode_h(self, cx, cy, lab, c=INK):
+    def diode_h(self, cx, cy, lab, c=None):
+        c = c or INK
         self.o.append(f'<polygon points="{cx-10},{cy-9} {cx-10},{cy+9} {cx+10},{cy}" fill="{PAPER}" stroke="{c}" stroke-width="1.5"/>')
         self.wire([(cx + 10, cy - 9), (cx + 10, cy + 9)], c)
         self.text(cx, cy - 16, lab, 11.5, MUTED, "middle")
@@ -83,7 +101,9 @@ class S:
         self.text(x + 30, y + 4, lab, 11.5, MUTED)
         return (x, y - 20), (x, y + 20), (x + 80, y), (x + 30, y - 25)  # +, -, out, vcc
 
-    def box(self, x, y, w, h, lines, c=INK, tc=INK):
+    def box(self, x, y, w, h, lines, c=None, tc=None):
+        c = c or INK
+        tc = tc or INK
         self.o.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{PAPER}" stroke="{c}" stroke-width="1.5"/>')
         for i, ln in enumerate(lines):
             self.text(x + 10, y + 20 + 16 * i, ln, 13 if i == 0 else 11.5, tc if i == 0 else MUTED, weight=500 if i == 0 else 400)
@@ -184,7 +204,7 @@ def schematic(out: Path) -> None:
     s.text(1020, 552, "Relay 2 on: right → TOP, left → BOTTOM.", 11.5, MUTED); s.text(1020, 568, "Both off: both electrodes on BOTTOM, no path.", 11.5, MUTED)
     # reading notes
     s.box(40, 560, 380, 108, ["How to read it", "The firmware sets V_SET with D3. The LM358 drives Q2 until the", "voltage on SENSE equals V_SET, so I = V_SET / 1.1 kΩ whatever", "the head does, until HV runs out. HV − (TOP drop) − (SENSE", "drop) − 0.2 V is all the head can have."])
-    s.write(out / "schematic.svg", "Schematic of the GVS board: boost converter, LM358 and 2N3904 current sink, two relays, kill switch and electrodes")
+    s.write(out / f"schematic{SUF}.svg", "Schematic of the GVS board: boost converter, LM358 and 2N3904 current sink, two relays, kill switch and electrodes")
 
 
 def pinout(out: Path) -> None:
@@ -211,13 +231,15 @@ def pinout(out: Path) -> None:
     s.text(480, 517, "BAT+ / BAT− pads (underside)", 11.5, HOT, "middle", 500); s.text(480, 532, "3.7 V LiPo, soldered permanently", 11, MUTED, "middle")
     s.text(16, 610, "BAT+ also goes to S1 col 19 by one black wire (J12) and feeds the relay + pins and the boost inductor.", 11.5, MUTED)
     s.text(16, 628, "D1 and D2 are on ADC1 on purpose: D3 (GPIO5) is on ADC2, which cannot be read while WiFi is on.", 11.5, MUTED)
-    s.write(out / "pinout.svg", "XIAO ESP32-C3 pinout as used on the GVS board")
+    s.write(out / f"pinout{SUF}.svg", "XIAO ESP32-C3 pinout as used on the GVS board")
 
 
 def main() -> int:
     out = Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True)
-    schematic(out); pinout(out)
-    print(f"wrote {out}/schematic.svg {out}/pinout.svg")
+    for theme in THEMES:
+        use(theme)
+        schematic(out); pinout(out)
+    print(f"wrote schematic and pinout, light and dark, in {out}")
     return 0
 
 

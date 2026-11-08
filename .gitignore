@@ -8,3 +8,6 @@ build/
 gvs/firmware/gvs_controller/secrets.h
 gvs/device.env
 tribe/live/
+uno_q/fun/hotspot_pass
+supabase/
+video/out/

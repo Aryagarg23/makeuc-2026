@@ -17,7 +17,7 @@ Build it from the pictures in `gvs/pictures/` and the hole-by-hole layout in `gv
 
 | Check | Expect |
 |---|---|
-| HV bus (col 4) ↔ GND bus (col 6) | about 9.15 kΩ (the 10k bleed in parallel with the sense divider). We read 9.16 kΩ |
+| HV bus (col 4) ↔ GND bus (col 6) | about 9.15 kΩ (the 10k bleed in parallel with the sense divider). I read 9.16 kΩ |
 | XIAO GND ↔ the GND bus | beep |
 | XIAO 5V ↔ GND | no beep |
 | each relay's − pin ↔ GND | beep |
@@ -65,7 +65,7 @@ Both relay modules should be **off** at idle. If a relay's LED is lit with nothi
 Do this only after flashing. Solder the black wire from the XIAO's BAT+ (or the LiPo's red lead) to **S1 D19**. Keep the solder small: D19 sits next to relay 1's − pin (GND). You may put a switch in this wire as an "arm" switch.
 
 - With the board off, D19 ↔ GND must not beep.
-- Power up. `status` should show `hv` of about 3.5 to 3.9 V (the battery through the diode). We read 3.85 to 3.89 V.
+- Power up. `status` should show `hv` of about 3.5 to 3.9 V (the battery through the diode). I read 3.85 to 3.89 V.
 
 ## 6. Boost tuning (no electrodes)
 
@@ -75,7 +75,7 @@ Use a freshly charged battery.
 python3 gvs/tools/bench.py boost-sweep --target 22
 ```
 
-or by hand, from the serial monitor: `boost 5`, then step up 5% at a time. Stop when HV reaches **20 to 24 V** on a full battery. **Never go above 28 V.** Feel Q1, the inductor and the diode for heat. Write the result into `BOOST_PCT`, reflash, then send `boost 0`. The firmware refuses any pulse until `BOOST_PCT` is set. Our result, 45%: HV about 21 V open, 17 V at 2 mA into 2.2 kΩ ([TESTING.md](TESTING.md)).
+or by hand, from the serial monitor: `boost 5`, then step up 5% at a time. Stop when HV reaches **20 to 24 V** on a full battery. **Never go above 28 V.** Feel Q1, the inductor and the diode for heat. Write the result into `BOOST_PCT`, reflash, then send `boost 0`. The firmware refuses any pulse until `BOOST_PCT` is set. My result, 45%: HV about 21 V open, 17 V at 2 mA into 2.2 kΩ ([TESTING.md](TESTING.md)).
 
 ## 7. Dummy loads
 

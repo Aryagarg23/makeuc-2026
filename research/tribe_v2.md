@@ -33,10 +33,10 @@ Researched and run 2026-11-07. Repo commit `af58661` (2026-06-23), HF weights sh
 
 ### Output
 
-- `preds` has shape `(n_TRs, 20484)`: fsaverage5, left hemisphere then right, 10,242 vertices each. README: https://github.com/facebookresearch/tribev2#quick-start. Our run gave `(12, 20484)` for 12 s.
+- `preds` has shape `(n_TRs, 20484)`: fsaverage5, left hemisphere then right, 10,242 vertices each. README: https://github.com/facebookresearch/tribev2#quick-start. My run gave `(12, 20484)` for 12 s.
 - Temporal resolution: features at 2 Hz, output at 1 Hz (`neuro.frequency: 1.0`, top-level `frequency: 2.0`, config 142 and 485; paper: "decimate... from 2 Hz to 1 Hz").
 - Predictions are already shifted 5 s back to undo hemodynamic lag (`neuro.offset: 5.0`, config 143; README). So pred[t] lines up with stimulus second t.
-- Only non-empty seconds are returned (`remove_empty_segments=True`, `demo_utils.py:148, 370-372`). Our log: `Predicted 12 / 100 segments (12.0% kept)`.
+- Only non-empty seconds are returned (`remove_empty_segments=True`, `demo_utils.py:148, 370-372`). My log: `Predicted 12 / 100 segments (12.0% kept)`.
 - Units: training targets were z-scored per vertex per session and detrended (config 158-164; paper §5.8), so predictions are in roughly z-units around a naturalistic-movie baseline.
 - Clip length: there's no minimum in the code. Windows are 100 TRs (`duration_trs: 100`, config 497), and inputs are chunked to 30–60 s. A 12 s clip worked.
 - **Cortex only in the release.** The paper also trained subcortical models on 8,802 Harvard-Oxford voxels in 8 regions: hippocampus, lateral ventricles, amygdala, thalamus, caudate, putamen, pallidum, accumbens (paper §5.8, https://arxiv.org/html/2605.04326v1). The repo has the training grid `tribev2/grids/run_subcortical.py`. But the HF repo ships only `best.ckpt` + `config.yaml`, with an fsaverage5 projection (https://huggingface.co/api/models/facebook/tribev2, config 144-154). There is no released subcortical checkpoint, so no accumbens or striatum predictions.
@@ -156,7 +156,7 @@ No background processes were left running. `pgrep -af run_cpu` is empty, and the
 
 ## Recommendation
 
-**What TRIBE can honestly do here:** it can estimate how hard a piece of content drives visual, auditory and attention cortex in an average viewer. Reels (fast cuts, faces, music, speech) should score well above DMs (a mostly static UI; typed text doesn't reach the text pathway). That's a defensible, physiologically framed reason for a bucket's weight. "Reward" or "addictiveness" is not defensible: the reward circuitry isn't in the released output, and vmPFC/OFC is the region group TRIBE predicts least well (inference: the paper's encoding-score maps are highest in sensory cortex; our vmPFC/OFC values sit near zero).
+**What TRIBE can honestly do here:** it can estimate how hard a piece of content drives visual, auditory and attention cortex in an average viewer. Reels (fast cuts, faces, music, speech) should score well above DMs (a mostly static UI; typed text doesn't reach the text pathway). That's a defensible, physiologically framed reason for a bucket's weight. "Reward" or "addictiveness" is not defensible: the reward circuitry isn't in the released output, and vmPFC/OFC is the region group TRIBE predicts least well (inference: the paper's encoding-score maps are highest in sensory cortex; my vmPFC/OFC values sit near zero).
 
 **Use 1, offline weight at enrollment (do this).** While the packet exemplar is being captured, the user screen-records the same 2 minutes on the iPhone. Run TRIBE on that recording and compute:
 
