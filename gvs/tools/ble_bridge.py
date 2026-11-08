@@ -52,16 +52,20 @@ LIVE_MAX_MA = 2.0  # firmware LIVE_MAX_MA; the bridge clamps too
 
 
 def mains_risk() -> str | None:
-    """Refuse current while this Mac is on its charger AND the board is on its USB: that ties the
-    electrodes to wall power. Bluetooth alone is isolated, so the charger by itself is fine."""
-    import glob
+    """Refuse current while this Mac is on its charger AND the GVS board is on its USB: that ties the
+    electrodes to wall power. Bluetooth alone is isolated, so the charger by itself is fine. The board is
+    recognised by its Espressif USB JTAG/serial unit, so other USB devices (the UNO Q) don't count."""
     import subprocess
     try:
         ac = "AC Power" in subprocess.run(["pmset", "-g", "batt"], capture_output=True, text=True, timeout=3).stdout
     except Exception:
         ac = True  # can't tell: assume the worst
-    usb = bool(glob.glob("/dev/cu.usbmodem*"))
-    return "403 refused: Mac is on its charger and the board is on USB. Unplug one." if ac and usb else None
+    try:
+        usb = "USB JTAG/serial debug unit" in subprocess.run(
+            ["ioreg", "-p", "IOUSB", "-w0"], capture_output=True, text=True, timeout=3).stdout
+    except Exception:
+        usb = True
+    return "403 refused: Mac is on its charger and the GVS board is on USB. Unplug one." if ac and usb else None
 
 
 async def live(ma: float, tok: str) -> str:

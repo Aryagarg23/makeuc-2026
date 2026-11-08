@@ -30,7 +30,7 @@
 <body>
 <main>
   <h1>GVS tilt control</h1>
-  <p class="sub">Press <b>Arm</b>, then hold and drag on the bar: left tilts left, right tilts right, how far = how strong. Let go = 0. <b>Space</b> or the red button stops everything. Arrow keys work too.</p>
+  <p class="sub">Press <b>Arm</b>, then hold and drag on the bar: left tilts left, right tilts right, how far = how strong. Let go = 0. <b>Space</b> or the red button stops everything. If the link drops for 1 s the board ramps off by itself. Arrow keys work too.</p>
 
   <div class="row">
     <button id="arm">Arm</button>
@@ -39,7 +39,7 @@
     <label><input id="inv" type="checkbox"> mirror (if the tilt comes out backwards)</label>
   </div>
   <div class="row">
-    <button id="nausea" style="background:#7b4bb7;color:#fff">Nausea (rock 60 s)</button>
+    <button id="nausea" style="background:#7b4bb7;color:#fff">Nausea (rock)</button>
     <label>speed <select id="hz"><option value="0.1">0.1 Hz (10 s per rock, slowest)</option><option value="0.2" selected>0.2 Hz</option><option value="0.5">0.5 Hz</option></select></label>
     <span class="sub" style="margin:0">Slow side-to-side rocking at the max slider's current. Seated only. STOP / Space ends it.</span>
   </div>
@@ -47,6 +47,9 @@
   <div id="pad"><div id="fill"></div><div id="mid"></div>
     <span class="lab" style="left:14px">◀ LEFT</span><span class="lab" style="right:14px">RIGHT ▶</span></div>
   <div id="big">OFF</div>
+  <div id="usbwarn" style="display:none;margin:8px 0;padding:10px 12px;border-radius:10px;background:var(--hot);color:#fff;font-weight:700">
+    The GVS board is on USB. Make sure the MacBook is NOT on its charger while the pads are on.</div>
+  <div id="link" style="font-weight:700"></div>
   <div id="status">board: …</div>
   <div id="msg"></div>
 </main>
@@ -54,7 +57,7 @@
 const TICK_MS = 66;                 // ~15 updates/s; the board ramps off if updates stop for 0.5 s
 const $ = id => document.getElementById(id);
 let armed = false, x = 0, keyX = 0, wasLive = false, sending = false;
-let prog = null;                    // nausea program: {t0, hz}; zero-mean sine, 5 s fade-in; the board ends it at 60 s
+let prog = null;                    // nausea program: {t0, hz}; zero-mean sine, 5 s fade-in; runs until STOP or the hourly budget
 
 const maxMa = () => parseFloat($("max").value);
 $("max").oninput = () => $("maxv").textContent = maxMa().toFixed(2);
@@ -91,7 +94,7 @@ async function stopAll(why) {
 $("nausea").onclick = () => {
   armed = true; wasLive = false; x = 0; keyX = 0;
   prog = { t0: performance.now(), hz: parseFloat($("hz").value) };
-  $("msg").textContent = `nausea: rocking ±${maxMa().toFixed(2)} mA at ${prog.hz} Hz for up to 60 s`;
+  $("msg").textContent = `nausea: rocking ±${maxMa().toFixed(2)} mA at ${prog.hz} Hz until STOP`;
 };
 setInterval(() => { if (prog) draw(); }, 100);
 
@@ -118,12 +121,27 @@ const release = () => { x = 0; draw(); };
 pad.addEventListener("pointerup", release);
 pad.addEventListener("pointercancel", release);
 
-setInterval(async () => {                    // live updates; skipped if the previous one hasn't returned
+let okAt = performance.now(), lastRtt = 0;
+async function timedFetch(url, ms) {         // a stalled request must not hold up the next update
+  const ac = new AbortController(), t = setTimeout(() => ac.abort(), ms);
+  try { return await fetch(url, { signal: ac.signal }); } finally { clearTimeout(t); }
+}
+setInterval(() => {                          // link indicator: how long since the board path last answered
+  const age = performance.now() - okAt;
+  const el = $("link");
+  if (!armed) { el.textContent = ""; return; }
+  el.textContent = age < 400 ? `link ok (${Math.round(lastRtt)} ms)` : age < 1000 ? "link slow" : "LINK LOST: board ramps off after 1 s";
+  el.style.color = age < 400 ? "var(--ok)" : "var(--hot)";
+}, 200);
+
+setInterval(async () => {                    // live updates; a stuck one is abandoned after 700 ms
   if (!armed || sending) return;
   sending = true;
+  const t0 = performance.now();
   try {
-    const r = await (await fetch(`/live?ma=${target()}`)).text();
-    if (r.startsWith("403") || r.startsWith("503")) { prog = null; armed = false; draw(); $("msg").textContent = r; }
+    const r = await (await timedFetch(`/live?ma=${target()}`, 700)).text();
+    if (r.startsWith("sent")) { okAt = performance.now(); lastRtt = okAt - t0; }
+    if (r.startsWith("403")) { prog = null; armed = false; draw(); $("msg").textContent = r; }
   } catch (e) { $("msg").textContent = "send failed: " + e; }
   sending = false;
 }, TICK_MS);
@@ -132,9 +150,10 @@ setInterval(async () => {                    // board status every 2 s; disarm w
   try {
     const s = await (await fetch("/cmd?line=status")).json();
     $("status").textContent = `board: ${s.mode}  level ${s.live_level} mA  hv ${s.hv} V  live budget ${Math.floor(s.live_budget_ms / 1000)} s  fault ${s.fault}`;
-    if (s.mode === "live") wasLive = true;
-    else if (armed && wasLive && s.mode === "idle") { prog = null; armed = false; wasLive = false; draw(); $("msg").textContent = "session ended: " + (s.msg || "idle") + " — press Arm to start again"; }
-    if (armed && s.live_budget_ms === 0) { prog = null; armed = false; draw(); $("msg").textContent = "live budget for this hour is used up (10 min with current flowing). The board refuses until it frees up."; }
+    $("usbwarn").style.display = s.usb ? "block" : "none";
+    if (s.mode === "live") { wasLive = true; if ($("msg").textContent.startsWith("resting")) $("msg").textContent = "live again"; }
+    else if (armed && wasLive && s.mode === "idle") { $("msg").textContent = "resting: " + (s.msg || "idle") + " (resumes by itself; STOP to end)"; }
+    if (armed && s.live_budget_ms === 0) { prog = null; armed = false; draw(); $("msg").textContent = "live budget for this hour is used up (30 min with current flowing). The board refuses until it frees up."; }
     if (s.fault) { prog = null; armed = false; draw(); $("msg").textContent = "FAULT: " + s.msg; }
   } catch (e) { $("status").textContent = "board: unreachable (" + e + ")"; }
 }, 2000);

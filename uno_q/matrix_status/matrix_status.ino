@@ -2,6 +2,7 @@
 // (vertical bar, right) on the UNO Q 8x13 LED matrix.
 // Linux side calls these over the Arduino Router (msgpack-rpc):
 //   show(bucket_index:int, intensity:float)   bucket 0..9, intensity 0..1
+//   tilt(level:float)                         -1..1: bar grows left/right from the centre column (fun mode)
 //   clear()
 // provide_safe() makes the handlers run in loop() context, which is where
 // the LED matrix driver must be touched.
@@ -46,6 +47,22 @@ void show(int bucket_index, float intensity) {
   render(bucket_index, intensity);
 }
 
+// Fun mode: centre column always lit as a marker; the bar spans rows 2..5 and grows toward the side
+// you're being tilted to, 6 columns at full scale.
+void tilt(float level) {
+  if (level < -1.0f) level = -1.0f;
+  if (level > 1.0f) level = 1.0f;
+  memset(frame, 0, sizeof(frame));
+  const int mid = COLS / 2;
+  for (int r = 0; r < ROWS; r++) frame[r * COLS + mid] = 1;
+  int n = (int)(fabsf(level) * mid + 0.5f);
+  for (int k = 1; k <= n; k++) {
+    int c = level < 0 ? mid - k : mid + k;
+    for (int r = 2; r <= 5; r++) frame[r * COLS + c] = 1;
+  }
+  matrix.draw(frame);
+}
+
 void clear_matrix() {
   memset(frame, 0, sizeof(frame));
   matrix.draw(frame);
@@ -57,6 +74,7 @@ void setup() {
   clear_matrix();
   Bridge.begin();
   Bridge.provide_safe("show", show);
+  Bridge.provide_safe("tilt", tilt);
   Bridge.provide_safe("clear", clear_matrix);
 }
 

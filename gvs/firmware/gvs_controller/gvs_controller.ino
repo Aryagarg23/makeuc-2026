@@ -65,9 +65,8 @@ const uint32_t MAX_MS       = 3000;    // longest single pulse
 const uint32_t COOLDOWN_MS  = 5000;    // min gap between pulses
 // ---- live mode: a controller streams a signed current; the board holds it while updates keep coming ----
 const float    LIVE_MAX_MA      = 2.0f;     // = FW_MAX_MA; research/gvs.md: no more than 2.0 mA in the first week
-const uint32_t LIVE_TIMEOUT_MS  = 500;      // dead-man: no update for this long -> ramp to 0 and end
-const uint32_t LIVE_MAX_MS      = 60000;    // one live session, then it ends on its own
-const uint32_t LIVE_BUDGET_MS   = 600000;   // time with current flowing allowed per rolling hour (10 min)
+const uint32_t LIVE_TIMEOUT_MS  = 1000;     // dead-man: no update for this long -> ramp to 0 and end (1 s rides out radio hiccups)
+const uint32_t LIVE_BUDGET_MS   = 1800000;  // time with current flowing allowed per rolling hour (30 min; raised from 10 on request 2026-11-08, inside the tDCS <=40 min envelope in research/gvs.md)
 const float    LIVE_SLEW_MA_S   = 4.0f;     // current changes at most this fast (0 -> 1.2 mA in 0.3 s, like RAMP_MS)
 const int      MAX_PER_HOUR = 30;      // research/gvs.md §6: <= 60-90 s of stimulus per hour, far below nausea protocols
 const uint32_t RAMP_MS      = 300;     // soft start/stop, avoids the "zap"
@@ -332,6 +331,7 @@ String statusJson() {
              ",\"hour_full\":" + String(hourFull(millis()) ? "true" : "false") +
              ",\"live_level\":" + String(liveLevel, 3) +
              ",\"live_budget_ms\":" + String(liveBudgetLeft(millis())) +
+             ",\"usb\":" + String(HWCDC::isPlugged() ? "true" : "false") +   // USB host attached: board tethered
              ",\"fault\":" + String(faulted ? "true" : "false") +
              ",\"msg\":\"" + (faulted ? faultMsg : lastMsg) + "\"}\n";
   return j;
@@ -400,6 +400,11 @@ class ConnCB : public BLEServerCallbacks {
 
 void bleSetup() {
   BLEDevice::init("GVS-zapper");
+  // Range: the board sits on the wearer's head, the controller across the room. ESP32-C3 BLE TX runs -24..+20 dBm in
+  // 3 dB steps, default +3 (esp32c3-libs/3.3.12 esp_bt.h). +18 dBm = 90% of the +20 dBm max, on every BLE path.
+  BLEDevice::setPower(ESP_PWR_LVL_P18, ESP_BLE_PWR_TYPE_DEFAULT);
+  BLEDevice::setPower(ESP_PWR_LVL_P18, ESP_BLE_PWR_TYPE_ADV);
+  BLEDevice::setPower(ESP_PWR_LVL_P18, ESP_BLE_PWR_TYPE_CONN_HDL0);
   BLEServer* srv = BLEDevice::createServer();
   srv->setCallbacks(new ConnCB());
   BLEService* svc = srv->createService(BLE_SVC_UUID);
@@ -438,10 +443,10 @@ void handleBoost() {
 void liveTick(uint32_t now) {
   uint32_t dt = now - liveLastTick; liveLastTick = now;
   if (fabsf(liveLevel) > 0.02f) liveUsedMs += dt;   // budget is exposure: time at 0 mA (bar centred) is free
-  if (!liveEnding && (now - liveLastCmd > LIVE_TIMEOUT_MS || now - liveStart > LIVE_MAX_MS || liveUsedMs >= LIVE_BUDGET_MS)) {
+  if (!liveEnding && (now - liveLastCmd > LIVE_TIMEOUT_MS || liveUsedMs >= LIVE_BUDGET_MS)) {   // no per-session cap (removed 2026-11-08 on request); the hourly budget bounds exposure
     liveEnding = true;
     lastMsg = now - liveLastCmd > LIVE_TIMEOUT_MS ? "live: controller silent, ramped off"
-            : now - liveStart > LIVE_MAX_MS ? "live: 60 s session limit" : "live: hourly budget used";
+            : "live: hourly budget used";
   }
   if (liveEnding) liveTarget = 0;
   float step = LIVE_SLEW_MA_S * dt / 1000.0f;
