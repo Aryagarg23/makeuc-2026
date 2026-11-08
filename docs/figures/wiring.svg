@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" font-family="Space Grotesk, Inter, system-ui, sans-serif" role="img" aria-labelledby="t">
+<title id="t">HVAC wiring diagram: battery, XIAO ESP32-C3, boost converter, current sink, two relays, kill switch, two electrodes</title>
+<defs><marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="#282215" stroke-width="1.4"/></marker><marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="#3b42db" stroke-width="1.4"/></marker><marker id="a-hot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="#e85b30" stroke-width="1.4"/></marker></defs>
+<rect width="1000" height="640" fill="#eae4d6"/>
+<text x="40" y="30" font-size="10.5" letter-spacing="1.4" fill="#6b6250">HVAC · WIRING, AS BUILT (XIAO ESP32-C3 ON A FEATHERWING TRIPLER PERFBOARD)</text>
+<rect x="40" y="60" width="160" height="64" fill="#eae4d6" stroke="#282215" stroke-width="1"/>
+<text x="52" y="82" font-size="14" font-weight="500" fill="#282215">3.7 V LiPo, 250 mAh</text>
+<text x="52" y="100" font-size="12" font-weight="400" fill="#6b6250">soldered to the BAT pads</text>
+<text x="52" y="116" font-size="12" font-weight="400" fill="#6b6250">the only supply</text>
+<rect x="250" y="50" width="180" height="250" fill="#eae4d6" stroke="#282215" stroke-width="1"/>
+<text x="262" y="72" font-size="14" font-weight="500" fill="#282215">XIAO ESP32-C3</text>
+<text x="262" y="90" font-size="12" font-weight="400" fill="#6b6250">firmware: HTTP + BLE,</text>
+<text x="262" y="106" font-size="12" font-weight="400" fill="#6b6250">limits enforced on-board</text>
+<polyline points="200,92 250,92" fill="none" stroke="#282215" stroke-width="1.2" marker-end="url(#a-ink)"/>
+<text x="225" y="84" font-size="11" fill="#282215" text-anchor="middle">BAT</text>
+<text x="262" y="150" font-size="12" font-weight="500" fill="#282215" text-anchor="start">D10</text>
+<text x="318" y="150" font-size="11.5" font-weight="400" fill="#6b6250" text-anchor="start">boost PWM</text>
+<text x="262" y="180" font-size="12" font-weight="500" fill="#282215" text-anchor="start">D2</text>
+<text x="318" y="180" font-size="11.5" font-weight="400" fill="#6b6250" text-anchor="start">HV sense</text>
+<text x="262" y="210" font-size="12" font-weight="500" fill="#282215" text-anchor="start">D3</text>
+<text x="318" y="210" font-size="11.5" font-weight="400" fill="#6b6250" text-anchor="start">SET PWM, 20 kHz, 10-bit</text>
+<text x="262" y="240" font-size="12" font-weight="500" fill="#282215" text-anchor="start">D1</text>
+<text x="318" y="240" font-size="11.5" font-weight="400" fill="#6b6250" text-anchor="start">current readback</text>
+<text x="262" y="270" font-size="12" font-weight="500" fill="#282215" text-anchor="start">D4 / D5</text>
+<text x="318" y="270" font-size="11.5" font-weight="400" fill="#6b6250" text-anchor="start">relay coils</text>
+<rect x="500" y="50" width="220" height="80" fill="#eae4d6" stroke="#e85b30" stroke-width="1"/>
+<text x="512" y="72" font-size="14" font-weight="500" fill="#e85b30">Boost converter</text>
+<text x="512" y="90" font-size="12" font-weight="400" fill="#6b6250">Q1 2N3904 · 1 mH · 1N5819 · 47 µF</text>
+<text x="512" y="106" font-size="12" font-weight="400" fill="#6b6250">HV 20–24 V · firmware cutoff 28 V</text>
+<polyline points="430,146 465,146 465,90 500,90" fill="none" stroke="#3b42db" stroke-width="1.2" marker-end="url(#a-blue)"/>
+<text x="482" y="82" font-size="11" fill="#3b42db" text-anchor="middle">330 Ω</text>
+<rect x="500" y="150" width="220" height="52" fill="#eae4d6" stroke="#282215" stroke-width="1"/>
+<text x="512" y="172" font-size="14" font-weight="500" fill="#282215">HV sense  100k / 8.2k → D2</text>
+<text x="512" y="190" font-size="12" font-weight="400" fill="#6b6250">10k bleed, HV bus → GND</text>
+<polyline points="500,176 465,176 465,176 430,176" fill="none" stroke="#3b42db" stroke-width="1.2" marker-end="url(#a-blue)"/>
+<polyline points="720,90 760,90 760,330" fill="none" stroke="#e85b30" stroke-width="1.2"/>
+<text x="772" y="210" font-size="11" font-weight="400" fill="#e85b30" text-anchor="start">HV bus</text>
+<rect x="500" y="230" width="220" height="92" fill="#eae4d6" stroke="#282215" stroke-width="1"/>
+<text x="512" y="252" font-size="14" font-weight="500" fill="#282215">Current sink</text>
+<text x="512" y="270" font-size="12" font-weight="400" fill="#6b6250">LM358 → Q2 2N3904</text>
+<text x="512" y="286" font-size="12" font-weight="400" fill="#6b6250">1.1 kΩ emitter: I = V_SET / 1100</text>
+<text x="512" y="302" font-size="12" font-weight="400" fill="#6b6250">readback 100k / 100k → D1</text>
+<polyline points="430,206 465,206 465,262 500,262" fill="none" stroke="#3b42db" stroke-width="1.2" marker-end="url(#a-blue)"/>
+<text x="482" y="256" font-size="11" fill="#3b42db" text-anchor="middle">10k + 1 µF</text>
+<polyline points="500,300 465,300 465,236 430,236" fill="none" stroke="#3b42db" stroke-width="1.2" marker-end="url(#a-blue)"/>
+<rect x="760" y="330" width="220" height="110" fill="#eae4d6" stroke="#282215" stroke-width="1"/>
+<text x="772" y="352" font-size="14" font-weight="500" fill="#282215">Relays, 5 V modules, D4 / D5</text>
+<text x="772" y="370" font-size="12" font-weight="400" fill="#6b6250">NO → TOP: HV through 2.2 kΩ</text>
+<text x="772" y="386" font-size="12" font-weight="400" fill="#6b6250">NC → BOTTOM: the sink</text>
+<text x="772" y="402" font-size="12" font-weight="400" fill="#6b6250">COM → an electrode each</text>
+<text x="772" y="418" font-size="12" font-weight="400" fill="#6b6250">one energized at a time: polarity</text>
+<polyline points="430,266 470,266 470,352 760,352" fill="none" stroke="#3b42db" stroke-width="1.2" marker-end="url(#a-blue)"/>
+<text x="620" y="344" font-size="11" fill="#3b42db" text-anchor="middle">D4 / D5</text>
+<polyline points="720,290 740,290 740,380 760,380" fill="none" stroke="#e85b30" stroke-width="1.2" marker-end="url(#a-hot)"/>
+<text x="720" y="400" font-size="11" fill="#e85b30" text-anchor="middle">BOTTOM</text>
+<polyline points="760,330 760,330" fill="none" stroke="#e85b30" stroke-width="1.2" marker-end="url(#a-hot)"/>
+<text x="772" y="320" font-size="11" font-weight="400" fill="#e85b30" text-anchor="start">TOP ← HV via 2.2 kΩ (compliance limit)</text>
+<rect x="760" y="480" width="100" height="44" fill="#eae4d6" stroke="#e85b30" stroke-width="1"/>
+<text x="772" y="502" font-size="14" font-weight="500" fill="#e85b30">Kill switch</text>
+<text x="772" y="520" font-size="12" font-weight="400" fill="#6b6250">in hand</text>
+<rect x="880" y="480" width="100" height="44" fill="#eae4d6" stroke="#e85b30" stroke-width="1"/>
+<text x="892" y="502" font-size="14" font-weight="500" fill="#e85b30">Left</text>
+<text x="892" y="520" font-size="12" font-weight="400" fill="#6b6250">mastoid</text>
+<rect x="880" y="560" width="100" height="44" fill="#eae4d6" stroke="#e85b30" stroke-width="1"/>
+<text x="892" y="582" font-size="14" font-weight="500" fill="#e85b30">Right</text>
+<text x="892" y="600" font-size="12" font-weight="400" fill="#6b6250">mastoid</text>
+<polyline points="780,440 780,480" fill="none" stroke="#e85b30" stroke-width="1.2" marker-end="url(#a-hot)"/>
+<text x="810" y="466" font-size="11" fill="#e85b30" text-anchor="middle">relay 1 COM</text>
+<polyline points="860,502 880,502" fill="none" stroke="#e85b30" stroke-width="1.2" marker-end="url(#a-hot)"/>
+<polyline points="940,440 940,560" fill="none" stroke="#e85b30" stroke-width="1.2" marker-end="url(#a-hot)"/>
+<text x="905" y="540" font-size="11" fill="#e85b30" text-anchor="middle">relay 2 COM</text>
+<text x="880" y="626" font-size="11" font-weight="400" fill="#e85b30" text-anchor="start">~1 mA sine burst, 1 Hz, whole cycles</text>
+<rect x="40" y="340" width="430" height="128" fill="#eae4d6" stroke="#e85b30" stroke-width="1.5"/>
+<text x="52" y="362" font-size="14" font-weight="500" fill="#e85b30">Danger. Current through the head can cause permanent harm.</text>
+<text x="52" y="380" font-size="12" font-weight="400" fill="#6b6250">Battery only. Never with the laptop on its charger.</text>
+<text x="52" y="396" font-size="12" font-weight="400" fill="#6b6250">Seated, kill switch in hand, a second person present.</text>
+<text x="52" y="412" font-size="12" font-weight="400" fill="#6b6250">Dummy loads (2.2k, 4.7k) before any skin. Start 0.5 mA, max 2.0 mA.</text>
+<text x="52" y="428" font-size="12" font-weight="400" fill="#6b6250">Not for epilepsy, implants or balance disorders.</text>
+<text x="52" y="444" font-size="12" font-weight="400" fill="#6b6250">Stop on flashes of light, burning, nausea or headache.</text>
+<rect x="40" y="490" width="430" height="114" fill="#eae4d6" stroke="#282215" stroke-width="1"/>
+<text x="52" y="512" font-size="14" font-weight="500" fill="#282215">Limits the board enforces itself</text>
+<text x="52" y="530" font-size="12" font-weight="400" fill="#6b6250">2.0 mA · 3000 ms · 5 s cooldown · 30 pulses per hour</text>
+<text x="52" y="546" font-size="12" font-weight="400" fill="#6b6250">HV cutoff 28 V (3 readings) · current readback trip</text>
+<text x="52" y="562" font-size="12" font-weight="400" fill="#6b6250">PWM must attach or the board faults at boot</text>
+<text x="52" y="578" font-size="12" font-weight="400" fill="#6b6250">token on every command · dead-man 1 s in live mode</text>
+</svg>

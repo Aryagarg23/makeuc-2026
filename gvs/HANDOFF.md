@@ -1,5 +1,7 @@
 # GVS zapper — handoff (MakeUC 2026)
 
+> **Historical.** This is the state of the build on the evening of 7 Nov 2026, before the firmware was flashed. The firmware has been flashed since and the open items below were worked through. The current docs are in [`../docs/`](../docs): [SAFETY](../docs/SAFETY.md), [HARDWARE](../docs/HARDWARE.md), [PINOUT](../docs/PINOUT.md), [BUILD](../docs/BUILD.md) and [TESTING](../docs/TESTING.md).
+
 Read this first. It is the state of the build as of Sat 7 Nov 2026, ~9:45 pm.
 
 ## What this is

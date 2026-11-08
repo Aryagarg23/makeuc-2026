@@ -1,5 +1,7 @@
 # gvs — the device
 
+> **DANGER. This device passes current through your head and can cause permanent damage.** Read [`../docs/SAFETY.md`](../docs/SAFETY.md) first. The full documentation: [HARDWARE](../docs/HARDWARE.md) (circuit, parts, perfboard), [PINOUT](../docs/PINOUT.md), [BUILD](../docs/BUILD.md), [TESTING](../docs/TESTING.md), [SOFTWARE](../docs/SOFTWARE.md).
+
 The device's design and wiring are documented in `HANDOFF.md`, including the original bench plan. This file records what changed after it was built, and what's next.
 
 ## Firmware state (flashed 2026-11-07 to the XIAO, MAC e8:f6:0a:14:37:c4)

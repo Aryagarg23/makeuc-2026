@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" width="960" height="640" font-family="Space Grotesk, Inter, system-ui, sans-serif" role="img" aria-labelledby="t"><title id="t">XIAO ESP32-C3 pinout as used on the GVS board</title><rect width="960" height="640" fill="#eae4d6"/>
+<text letter-spacing="1.4" x="16" y="24" font-size="10.5" font-weight="400" fill="#6b6250" text-anchor="start">XIAO ESP32-C3 · WHAT EACH PIN DOES ON THIS BOARD</text>
+<rect x="380" y="60" width="200" height="500" fill="#eae4d6" stroke="#282215" stroke-width="2"/>
+<text x="480" y="90" font-size="14" font-weight="500" fill="#282215" text-anchor="middle">XIAO ESP32-C3</text>
+<text x="480" y="108" font-size="11.5" font-weight="400" fill="#6b6250" text-anchor="middle">chip side up, USB-C at the top</text>
+<rect x="450" y="56" width="60" height="22" fill="#eae4d6" stroke="#282215" stroke-width="1.5"/>
+<text x="480" y="72" font-size="11" font-weight="400" fill="#6b6250" text-anchor="middle">USB-C</text>
+<polyline points="330,140 380,140" fill="none" stroke="#6b6250" stroke-width="2"/>
+<text x="372" y="134" font-size="13" font-weight="500" fill="#6b6250" text-anchor="end">D0</text>
+<text x="320" y="134" font-size="12" font-weight="400" fill="#6b6250" text-anchor="end">not used. Boot-strapping pin: leave it alone.</text>
+<text x="320" y="150" font-size="11" font-weight="400" fill="#6b6250" text-anchor="end">GPIO2</text>
+<polyline points="330,196 380,196" fill="none" stroke="#3b42db" stroke-width="2"/>
+<text x="372" y="190" font-size="13" font-weight="500" fill="#3b42db" text-anchor="end">D1</text>
+<text x="320" y="190" font-size="12" font-weight="400" fill="#3b42db" text-anchor="end">current readback: SENSE ÷ 2 (100k / 100k)</text>
+<text x="320" y="206" font-size="11" font-weight="400" fill="#6b6250" text-anchor="end">GPIO3 · ADC1</text>
+<polyline points="330,252 380,252" fill="none" stroke="#3b42db" stroke-width="2"/>
+<text x="372" y="246" font-size="13" font-weight="500" fill="#3b42db" text-anchor="end">D2</text>
+<text x="320" y="246" font-size="12" font-weight="400" fill="#3b42db" text-anchor="end">HV sense: HV ÷ 13.2 (100k / 8.2k)</text>
+<text x="320" y="262" font-size="11" font-weight="400" fill="#6b6250" text-anchor="end">GPIO4 · ADC1</text>
+<polyline points="330,308 380,308" fill="none" stroke="#3b42db" stroke-width="2"/>
+<text x="372" y="302" font-size="13" font-weight="500" fill="#3b42db" text-anchor="end">D3</text>
+<text x="320" y="302" font-size="12" font-weight="400" fill="#3b42db" text-anchor="end">SET: 20 kHz, 10-bit PWM, then 10k + 1 µF</text>
+<text x="320" y="318" font-size="11" font-weight="400" fill="#6b6250" text-anchor="end">GPIO5</text>
+<polyline points="330,364 380,364" fill="none" stroke="#3b42db" stroke-width="2"/>
+<text x="372" y="358" font-size="13" font-weight="500" fill="#3b42db" text-anchor="end">D4</text>
+<text x="320" y="358" font-size="12" font-weight="400" fill="#3b42db" text-anchor="end">relay 1 coil (left electrode on TOP)</text>
+<text x="320" y="374" font-size="11" font-weight="400" fill="#6b6250" text-anchor="end">GPIO6</text>
+<polyline points="330,420 380,420" fill="none" stroke="#3b42db" stroke-width="2"/>
+<text x="372" y="414" font-size="13" font-weight="500" fill="#3b42db" text-anchor="end">D5</text>
+<text x="320" y="414" font-size="12" font-weight="400" fill="#3b42db" text-anchor="end">relay 2 coil (right electrode on TOP)</text>
+<text x="320" y="430" font-size="11" font-weight="400" fill="#6b6250" text-anchor="end">GPIO7</text>
+<polyline points="330,476 380,476" fill="none" stroke="#6b6250" stroke-width="2"/>
+<text x="372" y="470" font-size="13" font-weight="500" fill="#6b6250" text-anchor="end">D6</text>
+<text x="320" y="470" font-size="12" font-weight="400" fill="#6b6250" text-anchor="end">not used</text>
+<text x="320" y="486" font-size="11" font-weight="400" fill="#6b6250" text-anchor="end">GPIO21 · TX</text>
+<polyline points="580,140 630,140" fill="none" stroke="#6b6250" stroke-width="2"/>
+<text x="588" y="134" font-size="13" font-weight="500" fill="#6b6250" text-anchor="start">5V</text>
+<text x="640" y="134" font-size="12" font-weight="400" fill="#6b6250" text-anchor="start">not used (USB 5 V only)</text>
+<text x="640" y="150" font-size="11" font-weight="400" fill="#6b6250" text-anchor="start"></text>
+<polyline points="580,196 630,196" fill="none" stroke="#282215" stroke-width="2"/>
+<text x="588" y="190" font-size="13" font-weight="500" fill="#282215" text-anchor="start">GND</text>
+<text x="640" y="190" font-size="12" font-weight="400" fill="#282215" text-anchor="start">circuit ground, relay − pins</text>
+<text x="640" y="206" font-size="11" font-weight="400" fill="#6b6250" text-anchor="start"></text>
+<polyline points="580,252 630,252" fill="none" stroke="#6b6250" stroke-width="2"/>
+<text x="588" y="246" font-size="13" font-weight="500" fill="#6b6250" text-anchor="start">3V3</text>
+<text x="640" y="246" font-size="12" font-weight="400" fill="#6b6250" text-anchor="start">not used</text>
+<text x="640" y="262" font-size="11" font-weight="400" fill="#6b6250" text-anchor="start"></text>
+<polyline points="580,308 630,308" fill="none" stroke="#3b42db" stroke-width="2"/>
+<text x="588" y="302" font-size="13" font-weight="500" fill="#3b42db" text-anchor="start">D10</text>
+<text x="640" y="302" font-size="12" font-weight="400" fill="#3b42db" text-anchor="start">boost PWM → 330 Ω → Q1 base</text>
+<text x="640" y="318" font-size="11" font-weight="400" fill="#6b6250" text-anchor="start">GPIO10</text>
+<polyline points="580,364 630,364" fill="none" stroke="#6b6250" stroke-width="2"/>
+<text x="588" y="358" font-size="13" font-weight="500" fill="#6b6250" text-anchor="start">D9</text>
+<text x="640" y="358" font-size="12" font-weight="400" fill="#6b6250" text-anchor="start">not used</text>
+<text x="640" y="374" font-size="11" font-weight="400" fill="#6b6250" text-anchor="start">GPIO9</text>
+<polyline points="580,420 630,420" fill="none" stroke="#6b6250" stroke-width="2"/>
+<text x="588" y="414" font-size="13" font-weight="500" fill="#6b6250" text-anchor="start">D8</text>
+<text x="640" y="414" font-size="12" font-weight="400" fill="#6b6250" text-anchor="start">not used</text>
+<text x="640" y="430" font-size="11" font-weight="400" fill="#6b6250" text-anchor="start">GPIO8</text>
+<polyline points="580,476 630,476" fill="none" stroke="#6b6250" stroke-width="2"/>
+<text x="588" y="470" font-size="13" font-weight="500" fill="#6b6250" text-anchor="start">D7</text>
+<text x="640" y="470" font-size="12" font-weight="400" fill="#6b6250" text-anchor="start">not used</text>
+<text x="640" y="486" font-size="11" font-weight="400" fill="#6b6250" text-anchor="start">GPIO20 · RX</text>
+<rect x="395" y="500" width="170" height="40" fill="#eae4d6" stroke="#e85b30" stroke-width="1.5"/>
+<text x="480" y="517" font-size="11.5" font-weight="500" fill="#e85b30" text-anchor="middle">BAT+ / BAT− pads (underside)</text>
+<text x="480" y="532" font-size="11" font-weight="400" fill="#6b6250" text-anchor="middle">3.7 V LiPo, soldered permanently</text>
+<text x="16" y="610" font-size="11.5" font-weight="400" fill="#6b6250" text-anchor="start">BAT+ also goes to S1 col 19 by one black wire (J12) and feeds the relay + pins and the boost inductor.</text>
+<text x="16" y="628" font-size="11.5" font-weight="400" fill="#6b6250" text-anchor="start">D1 and D2 are on ADC1 on purpose: D3 (GPIO5) is on ADC2, which cannot be read while WiFi is on.</text>
+</svg>
