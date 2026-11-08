@@ -5,6 +5,10 @@
                                            cap W by TRIBE's predicted drive for the screen recording
   classify CAPTURE.tsv                     dry run over a saved capture, one line per window
   live [--relay | --gvs gvs/device.env] --max-ma MA   read tshark lines on stdin, stimulate on confirmed windows
+      [--dashboard PORT]                   local page to watch traffic and choose what nauseates (dashboard.py)
+
+--rules (default: rules.json next to --store) holds the live-editable rules (rules.py): per-service weights (0 = never),
+per-bucket on/off and weight, and pause. classify and live both apply them; the dashboard edits them.
 
 Windows are --window s long and slide every --step s. A stimulus needs --confirm consecutive
 steps agreeing on a bucket (gvs_pipeline/trigger.py).
@@ -18,6 +22,7 @@ from pathlib import Path
 from typing import Iterable, TextIO
 
 from . import classify as C
+from . import rules as R
 from .flows import windows
 from .packets import Packet, parse_line
 from .trigger import Trigger
@@ -58,6 +63,14 @@ def _run(lines: Iterable[str], a: argparse.Namespace, out: TextIO, esp=None) -> 
     if stale:
         raise SystemExit(f"buckets {stale} were enrolled at a different --window; re-enroll at {a.window} s")
     trig = Trigger(a.step, a.confirm)
+    live_rules = R.Live(getattr(a, "rules", None) or a.store.with_name("rules.json"), {b.name for b in buckets})
+    state = None
+    if getattr(a, "dashboard", None) is not None:
+        from . import dashboard as D
+
+        state = D.State(live_rules, buckets, esp is not None, getattr(a, "max_ma", None), a.window, a.step)
+        srv = D.serve(state, a.dashboard_host, a.dashboard)
+        print(f"dashboard: http://{a.dashboard_host}:{srv.server_address[1]}/", file=sys.stderr, flush=True)
     feed = att = None
     if getattr(a, "tribe_feed", None):
         from . import tribe as T
@@ -70,17 +83,23 @@ def _run(lines: Iterable[str], a: argparse.Namespace, out: TextIO, esp=None) -> 
         if feed is not None:
             for r in TL.step(feed, att, buckets, *anchors):
                 out.write(json.dumps(r) + "\n")
-        best = C.strongest(C.classify(o, buckets) for o in obs)
+        rules = live_rules.get()  # re-read every window: dashboard edits apply on the next step
+        decisions = [rules.decide(o, buckets) for o in obs]
+        best = C.strongest(decisions)
         if att is not None:
             att.note(t, best.bucket if best is not None else None)
-        fired = trig.update(t, best)
+        fired = trig.update(t, None if rules.paused else best)  # paused: decide and show, never fire
         rec: dict = {"window": t, "services": len(obs), "fired": fired is not None}
+        if rules.paused:
+            rec["paused"] = True
         if best is not None:
             ms = C.duration_ms(best.intensity)
             rec.update(bucket=best.bucket, service=best.obs.service, via=best.via,
                        confidence=round(best.confidence, 3), intensity=round(best.intensity, 3), ms=ms)
             if fired is not None and esp is not None:
                 rec["gvs"] = esp.stim(best.bucket, best.intensity, ms)
+        if state is not None:
+            state.note(t, decisions, rec)
         out.write(json.dumps(rec) + "\n")
         out.flush()
 
@@ -112,6 +131,7 @@ def cmd_live(a: argparse.Namespace) -> int:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="gvs_pipeline")
     ap.add_argument("--store", type=Path, default=Path("prototypes.json"))
+    ap.add_argument("--rules", type=Path, help="live-editable rules (rules.py); default: rules.json next to --store")
     ap.add_argument("--window", type=float, default=3.0, help="window length, s")
     ap.add_argument("--step", type=float, default=1.0, help="window slide, s")
     ap.add_argument("--confirm", type=int, default=2, help="consecutive agreeing steps before a stimulus")
@@ -134,8 +154,13 @@ def main(argv: list[str] | None = None) -> int:
                    help="send stimuli through the Bluetooth relay (gvs/tools/ble_bridge.py); default URL http://127.0.0.1:8765")
     l.add_argument("--max-ma", type=float, help="current at intensity 1, mA (<= firmware FW_MAX_MA 2.0)")
     l.add_argument("--hz", type=float, default=1.0, help="sine frequency, 0.5-2 Hz")
+    l.add_argument("--dashboard", type=int, metavar="PORT", help="serve the rules dashboard on this port")
+    l.add_argument("--dashboard-host", default="127.0.0.1",
+                   help="bind address; anyone who can reach the page can change what fires")
     l.set_defaults(fn=cmd_live)
     a = ap.parse_args(argv)
+    if a.rules is None:
+        a.rules = a.store.with_name("rules.json")
     return a.fn(a)
 
 

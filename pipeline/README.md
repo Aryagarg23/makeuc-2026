@@ -18,6 +18,29 @@ ssh unoq ./capture.sh | python -m gvs_pipeline live --gvs ../gvs/device.env --ma
 
 `live` without `--gvs` is a dry run: one JSON line per window, nothing sent. `--max-ma` is required with `--gvs` and is the current at intensity 1: use the ceiling you reached in the on-head titration (`../research/gvs.md`), never above the firmware's 2.0.
 
+## Dashboard: choose what nauseates
+
+```bash
+ssh unoq ./capture.sh | python -m gvs_pipeline live --relay --max-ma 0.5 --dashboard 8080
+```
+
+Open http://127.0.0.1:8080. It lists each service moving packets now, and each has an **Auto / Nauseate / Never** control:
+- **Nauseate** fires that service at the slider's strength, even if you never enrolled it.
+- **Never** vetoes it, even if a bucket matches it (the DMs case).
+- **Auto** leaves it to the enrolled buckets.
+
+You can also add a domain by hand, switch enrolled buckets off or change their weight, and pause everything. Rules live in `rules.json` next to `--store` (`gvs_pipeline/rules.py`). They are re-read every window, so a change applies on the next 1 s step. `classify` applies them too.
+
+What the rules can't change:
+- The rate floor: a quiet service never fires.
+- The 2-step confirm and the 10 s refractory.
+- `--max-ma`: a rule's weight is a fraction of it.
+- The firmware's own caps.
+
+The page binds to 127.0.0.1. Anyone who can reach it can change what fires, so only pass `--dashboard-host 0.0.0.0` on a network you trust.
+
+Try it without a capture (synthetic traffic, dry run): `python3 tools/demo_feed.py | python -m gvs_pipeline --store /tmp/demo/p.json --window 3 live --dashboard 8090`.
+
 ## How a window is decided (`gvs_pipeline/classify.py`)
 
 - Names come from DNS answers, TLS SNI and HTTP Host, learned per IP (`flows.py:HostMap`). Services are registrable domains (`flows.py:service_of`; a short multi-label suffix list, not the full Public Suffix List).
