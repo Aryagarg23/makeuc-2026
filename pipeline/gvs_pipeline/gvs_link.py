@@ -6,6 +6,12 @@ the on-head titration (start 0.5 mA, 0.25 mA steps), never above the firmware's 
 
 Replies that mean a person or the device stopped things (bad token, latched fault) halt the
 link for good; busy and cooldown are skipped stimuli, not halts.
+
+Two transports:
+- WiFi HTTP straight to the board (`Gvs(url, token, ...)`, `/pulse?...`), when the firmware has an SSID.
+- The Bluetooth relay on this Mac (`Gvs.relay(...)`, gvs/tools/ble_bridge.py), which adds the token and
+  answers the firmware's own "<code> <msg>" line in the body. The relay refuses current with
+  "403 refused: ..." while the Mac is on its charger and the board is on USB; that is a skip, not a halt.
 """
 from __future__ import annotations
 
@@ -20,6 +26,7 @@ FW_MAX_MA = 2.0  # gvs_controller.ino FW_MAX_MA
 FW_MAX_MS = 3000  # gvs_controller.ino MAX_MS
 FW_MIN_MS = 600  # gvs_controller.ino 2 * RAMP_MS
 HALT_STATUS = {403: "bad_token", 423: "faulted"}
+RELAY_URL = "http://127.0.0.1:8765"
 SKIP_STATUS = {409: "busy", 429: "cooldown"}
 
 # (url) -> (http status, body); raises OSError when unreachable
@@ -71,11 +78,23 @@ class Gvs:
         self._pol = 0
 
     @classmethod
+    def relay(cls, max_ma: float, hz: float = 1.0, url: str = RELAY_URL, get: Getter = _http_get) -> "Gvs":
+        return cls(url, None, max_ma, hz, get=get)
+
+    @classmethod
     def from_env(cls, path: Path, max_ma: float, hz: float = 1.0) -> "Gvs":
         e = load_env(path)
         return cls(e["GVS_URL"], e["GVS_TOKEN"], max_ma, hz)
 
     def _call(self, path: str, **params) -> tuple[int, str]:
+        if self.token is None:  # relay: one firmware command line; the code is the body's first word
+            line = "stop" if path == "/stop" else (
+                f"pulse {params['ma']} {params['ms']} {params['hz']} {params['pol']} {params['mode']}")
+            code, body = self.get(f"{self.base}/cmd?{urllib.parse.urlencode({'line': line})}")
+            head, _, rest = body.strip().partition(" ")
+            if head.isdigit():
+                return int(head), rest
+            return code, body
         q = urllib.parse.urlencode({**params, "token": self.token})
         return self.get(f"{self.base}{path}?{q}")
 
@@ -93,6 +112,10 @@ class Gvs:
         if code == 200:
             self._pol ^= 1  # alternate which side leads, so successive bursts start on opposite sides
             return {"ok": True, **rec}
+        if self.token is None and code == 403:
+            return {"ok": False, "reason": "mains_risk", **rec}
+        if self.token is None and code == 503:
+            return {"ok": False, "reason": "unreachable", **rec}
         if code in HALT_STATUS:
             self.halted = HALT_STATUS[code]
             return {"ok": False, "reason": "halted", "cause": self.halted, **rec}

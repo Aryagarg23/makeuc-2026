@@ -122,3 +122,41 @@ def test_hourly_limit_reported_as_such_and_not_a_halt():
     g, _ = link([(429, "hourly_limit\n")])
     r = g.stim("b", 0.5, 1000)
     assert r["reason"] == "hourly_limit" and g.halted is None
+
+
+def relay(replies=None, max_ma=1.0, hz=1.0):
+    h = FakeHttp(replies)
+    return Gvs.relay(max_ma, hz, url="http://relay", get=h), h
+
+
+def test_relay_sends_one_firmware_command_line():
+    g, h = relay([(200, "200 ok 0.50 mA 2000 ms")])
+    r = g.stim("ig_reels", 0.5, 2000)
+    path, q = h.calls[0]
+    assert path == "/cmd" and q == {"line": "pulse 0.5 2000 1.0 0 sine"} and r["ok"]
+
+
+@given(st.sampled_from(["429 cooldown", "429 hourly_limit", "409 busy"]))
+def test_relay_firmware_refusals_are_skips(body):
+    g, _ = relay([(200, body)])
+    r = g.stim("b", 0.5, 1000)
+    assert not r["ok"] and g.halted is None and r["reason"] == {"429": body[4:], "409": "busy"}[body[:3]]
+
+
+def test_relay_fault_halts():
+    # Reason: a latched fault needs a human at the board; the pipeline must not keep firing into it.
+    g, h = relay([(200, "423 faulted: overcurrent raw 2.40 mA (power cycle)")])
+    g.stim("b", 0.5, 1000)
+    assert g.stim("b", 0.5, 1000)["reason"] == "halted" and len(h.calls) == 1
+
+
+def test_relay_mains_refusal_is_a_skip_not_a_halt():
+    # Reason: the relay refuses while the Mac charger and the board's USB are both in; unplugging one fixes it,
+    # so stimulation should resume without restarting the pipeline.
+    g, _ = relay([(200, "403 refused: Mac is on its charger and the board is on USB. Unplug one.")])
+    assert g.stim("b", 0.5, 1000)["reason"] == "mains_risk" and g.halted is None
+
+
+def test_relay_down_is_a_skip():
+    g, _ = relay([(503, "503 bridge: GVS-zapper not found")])
+    assert g.stim("b", 0.5, 1000)["reason"] == "unreachable" and g.halted is None

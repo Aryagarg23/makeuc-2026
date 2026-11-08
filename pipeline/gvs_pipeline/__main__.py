@@ -4,7 +4,7 @@
       [--tribe CLIP.tribe.json --tribe-anchors NEUTRAL.tribe.json HIGH.tribe.json]
                                            cap W by TRIBE's predicted drive for the screen recording
   classify CAPTURE.tsv                     dry run over a saved capture, one line per window
-  live [--gvs gvs/device.env --max-ma MA]  read tshark lines on stdin, stimulate on confirmed windows
+  live [--relay | --gvs gvs/device.env] --max-ma MA   read tshark lines on stdin, stimulate on confirmed windows
 
 Windows are --window s long and slide every --step s. A stimulus needs --confirm consecutive
 steps agreeing on a bucket (gvs_pipeline/trigger.py).
@@ -81,12 +81,12 @@ def cmd_classify(a: argparse.Namespace) -> int:
 
 def cmd_live(a: argparse.Namespace) -> int:
     esp = None
-    if a.gvs:
+    if a.gvs or a.relay:
         from .gvs_link import Gvs
 
         if a.max_ma is None:
-            raise SystemExit("--gvs needs --max-ma: the ceiling you titrated to on-head (research/gvs.md)")
-        esp = Gvs.from_env(a.gvs, a.max_ma, a.hz)
+            raise SystemExit("--gvs/--relay needs --max-ma: the ceiling you titrated to on-head (research/gvs.md)")
+        esp = Gvs.relay(a.max_ma, a.hz, a.relay) if a.relay else Gvs.from_env(a.gvs, a.max_ma, a.hz)
     try:
         _run(sys.stdin, a, sys.stdout, esp)
     finally:
@@ -114,6 +114,8 @@ def main(argv: list[str] | None = None) -> int:
     c.set_defaults(fn=cmd_classify)
     l = sub.add_parser("live")
     l.add_argument("--gvs", type=Path, help="device env file with GVS_URL, GVS_TOKEN (gvs/tools/make_secrets.sh); omit for dry run")
+    l.add_argument("--relay", nargs="?", const="http://127.0.0.1:8765", default=None,
+                   help="send stimuli through the Bluetooth relay (gvs/tools/ble_bridge.py); default URL http://127.0.0.1:8765")
     l.add_argument("--max-ma", type=float, help="current at intensity 1, mA (<= firmware FW_MAX_MA 2.0)")
     l.add_argument("--hz", type=float, default=1.0, help="sine frequency, 0.5-2 Hz")
     l.set_defaults(fn=cmd_live)
