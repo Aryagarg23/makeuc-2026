@@ -63,6 +63,12 @@ const float    R_SENSE      = 1100.0f; // ohms (1k + 100R)
 const float    FW_MAX_MA    = 2.0f;    // firmware ceiling; hardware ceiling ~3.0 mA
 const uint32_t MAX_MS       = 3000;    // longest single pulse
 const uint32_t COOLDOWN_MS  = 5000;    // min gap between pulses
+// ---- live mode: a controller streams a signed current; the board holds it while updates keep coming ----
+const float    LIVE_MAX_MA      = 2.0f;     // = FW_MAX_MA; research/gvs.md: no more than 2.0 mA in the first week
+const uint32_t LIVE_TIMEOUT_MS  = 500;      // dead-man: no update for this long -> ramp to 0 and end
+const uint32_t LIVE_MAX_MS      = 60000;    // one live session, then it ends on its own
+const uint32_t LIVE_BUDGET_MS   = 600000;   // time with current flowing allowed per rolling hour (10 min)
+const float    LIVE_SLEW_MA_S   = 4.0f;     // current changes at most this fast (0 -> 1.2 mA in 0.3 s, like RAMP_MS)
 const int      MAX_PER_HOUR = 30;      // research/gvs.md §6: <= 60-90 s of stimulus per hour, far below nausea protocols
 const uint32_t RAMP_MS      = 300;     // soft start/stop, avoids the "zap"
 const float    MAX_HZ       = 2.0f;
@@ -72,12 +78,15 @@ const uint32_t OVER_TRIP_MS = 50;
 // ---------- state ----------
 WebServer server(80);
 bool wifiOn = false;               // HTTP API only exists when WiFi is up; with WiFi off lwIP isn't started
-enum Mode { IDLE, DC, SINE };
+enum Mode { IDLE, DC, SINE, LIVE };
 Mode     mode = IDLE;
 float    targetMa = 0, freqHz = 1.0f, commandedMa = 0;
 int      polarity = 0;          // 0: L->R, 1: R->L
 int      relayState = -1;       // -1 disconnected, 0/1 polarity
 uint32_t tStart = 0, durMs = 0, lastEnd = 0, overSince = 0;
+float    liveTarget = 0, liveLevel = 0;         // signed mA: + = polarity 0 (L->R), - = polarity 1
+uint32_t liveLastCmd = 0, liveStart = 0, liveLastTick = 0, liveUsedMs = 0, liveWindowStart = 0;
+bool     liveEnding = false;
 int      flipStage = 0; uint32_t flipT = 0;
 bool     faulted = false; String faultMsg = "", lastMsg = "";
 bool     waitingHV = false; uint32_t hvT0 = 0;
@@ -183,6 +192,7 @@ void outputOff() {
   if (!boostTuning) boostWritePct(0); // HV bleeds down through the 10k
   waitingHV = false;
   mode = IDLE; flipStage = 0; overSince = 0;
+  liveLevel = liveTarget = 0; liveEnding = false;
   lastEnd = millis();
 }
 
@@ -249,6 +259,37 @@ int startPulse(float ma, long ms, float hz, int pol, bool dc, String& msg) {
   return 200;
 }
 
+uint32_t liveBudgetLeft(uint32_t now) {
+  if (liveWindowStart == 0 || now - liveWindowStart >= 3600000UL) return LIVE_BUDGET_MS;
+  return liveUsedMs >= LIVE_BUDGET_MS ? 0 : LIVE_BUDGET_MS - liveUsedMs;
+}
+
+// "live <signed mA>": start a live session or update its target. Every update feeds the dead-man.
+int liveCommand(float ma, String& msg) {
+  uint32_t now = millis();
+  float t = constrain(ma, -LIVE_MAX_MA, LIVE_MAX_MA);
+  if (mode == LIVE) {
+    if (!liveEnding) { liveTarget = t; liveLastCmd = now; }
+    msg = "live " + String(liveLevel, 2) + " -> " + String(liveTarget, 2);
+    return 200;
+  }
+  if (faulted)       { msg = "faulted: " + faultMsg + " (power cycle)"; return 423; }
+  if (mode != IDLE)  { msg = "busy"; return 409; }
+  if (boostTuning)   { msg = "boost tuning on; boost 0 first"; return 409; }
+  if (BOOST_PCT <= 0){ msg = "BOOST_PCT not set yet"; return 409; }
+  if (lastEnd && now - lastEnd < COOLDOWN_MS) { msg = "cooldown"; return 429; }
+  if (liveWindowStart == 0 || now - liveWindowStart >= 3600000UL) { liveWindowStart = now; liveUsedMs = 0; }
+  if (liveUsedMs >= LIVE_BUDGET_MS) { msg = "live_budget"; return 429; }
+  mode = LIVE; liveEnding = false;
+  liveTarget = t; liveLevel = 0;
+  liveLastCmd = liveStart = liveLastTick = now;
+  overSince = 0;
+  waitingHV = true; hvT0 = now;
+  boostWritePct(BOOST_PCT);
+  msg = "live start -> " + String(liveTarget, 2);
+  return 200;
+}
+
 int setBoost(float pct, String& msg) {
   if (faulted)      { msg = "faulted: " + faultMsg; return 423; }
   if (mode != IDLE) { msg = "busy"; return 409; }
@@ -279,7 +320,7 @@ void handleStop() {
 
 String statusJson() {
   uint32_t cd = (lastEnd && millis() - lastEnd < COOLDOWN_MS) ? COOLDOWN_MS - (millis() - lastEnd) : 0;
-  String j = "{\"mode\":\"" + String(mode == IDLE ? "idle" : mode == DC ? "dc" : "sine") +
+  String j = "{\"mode\":\"" + String(mode == IDLE ? "idle" : mode == DC ? "dc" : mode == SINE ? "sine" : "live") +
              "\",\"cmd_ma\":" + String(commandedMa, 3) +
              ",\"meas_ma\":" + String(measuredMa(), 3) +
              ",\"raw_ma\":" + String(rawMa(), 3) +
@@ -289,6 +330,8 @@ String statusJson() {
              ",\"cooldown_ms\":" + String(cd) +
              ",\"pulses_logged\":" + String(pulseCount) +
              ",\"hour_full\":" + String(hourFull(millis()) ? "true" : "false") +
+             ",\"live_level\":" + String(liveLevel, 3) +
+             ",\"live_budget_ms\":" + String(liveBudgetLeft(millis())) +
              ",\"fault\":" + String(faulted ? "true" : "false") +
              ",\"msg\":\"" + (faulted ? faultMsg : lastMsg) + "\"}\n";
   return j;
@@ -317,8 +360,9 @@ String runCommand(String line) {
     if (mode != IDLE || boostTuning) { code = 409; msg = "busy"; }
     else { BOOST_PCT = constrain(a, 0.0f, BOOST_MAX_PCT); code = 200; msg = "BOOST_PCT " + String(BOOST_PCT, 1); }
   }
+  else if (k == "live" && n >= 2) code = liveCommand(a, msg);
   else if (k == "pulse" && n >= 3) code = startPulse(a, ms, n >= 4 ? hz : 1.0f, n >= 5 ? pol : 0, String(md) == "dc", msg);
-  else msg = "status | stop | boost <pct> | boostpct <pct> | pulse <ma> <ms> <hz> <pol> <sine|dc>";
+  else msg = "status | stop | boost <pct> | boostpct <pct> | pulse <ma> <ms> <hz> <pol> <sine|dc> | live <signed ma>";
   return String(code) + " " + msg;
 }
 
@@ -344,7 +388,8 @@ class CmdCB : public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic* c) override {
     String v = String(c->getValue().c_str());
     portENTER_CRITICAL(&bleMux);
-    if (!bleHas) { blePending = v; bleHas = true; }   // one command at a time; the loop runs it
+    // latest command wins (live updates stream in), but a pending stop is never overwritten
+    if (!bleHas || !blePending.endsWith(" stop")) { blePending = v; bleHas = true; }
     portEXIT_CRITICAL(&bleMux);
   }
 };
@@ -358,7 +403,7 @@ void bleSetup() {
   BLEServer* srv = BLEDevice::createServer();
   srv->setCallbacks(new ConnCB());
   BLEService* svc = srv->createService(BLE_SVC_UUID);
-  BLECharacteristic* cmd = svc->createCharacteristic(BLE_CMD_UUID, BLECharacteristic::PROPERTY_WRITE);
+  BLECharacteristic* cmd = svc->createCharacteristic(BLE_CMD_UUID, BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_WRITE_NR);
   cmd->setCallbacks(new CmdCB());
   bleResp = svc->createCharacteristic(BLE_RESP_UUID, BLECharacteristic::PROPERTY_READ);
   bleResp->setValue("ready");
@@ -387,6 +432,26 @@ void handleBoost() {
   String msg;
   int code = setBoost(server.arg("pct").toFloat(), msg);
   server.send(code, "text/plain", msg + "\n");
+}
+
+// Live session step: dead-man, session and budget limits, slew-limited current, polarity via handleFlip.
+void liveTick(uint32_t now) {
+  uint32_t dt = now - liveLastTick; liveLastTick = now;
+  if (fabsf(liveLevel) > 0.02f) liveUsedMs += dt;   // budget is exposure: time at 0 mA (bar centred) is free
+  if (!liveEnding && (now - liveLastCmd > LIVE_TIMEOUT_MS || now - liveStart > LIVE_MAX_MS || liveUsedMs >= LIVE_BUDGET_MS)) {
+    liveEnding = true;
+    lastMsg = now - liveLastCmd > LIVE_TIMEOUT_MS ? "live: controller silent, ramped off"
+            : now - liveStart > LIVE_MAX_MS ? "live: 60 s session limit" : "live: hourly budget used";
+  }
+  if (liveEnding) liveTarget = 0;
+  float step = LIVE_SLEW_MA_S * dt / 1000.0f;
+  if (liveLevel < liveTarget) liveLevel = min(liveLevel + step, liveTarget);
+  else if (liveLevel > liveTarget) liveLevel = max(liveLevel - step, liveTarget);
+  if (liveEnding && fabsf(liveLevel) < 0.001f) { String keep = lastMsg; outputOff(); lastMsg = keep; return; }
+  int want = (liveLevel > 0) ? 0 : (liveLevel < 0) ? 1 : (relayState < 0 ? 0 : relayState);
+  if (handleFlip(want, now)) { liveLevel = 0; return; }   // flips pass through zero current
+  setCurrentMa(fabsf(liveLevel));
+  checkReadback(now);
 }
 
 // ---------- main ----------
@@ -465,6 +530,8 @@ void loop() {
     }
     return;
   }
+  if (mode == LIVE) { liveTick(now); return; }
+
   uint32_t t = now - tStart;
   if (t >= durMs) { outputOff(); return; }
 

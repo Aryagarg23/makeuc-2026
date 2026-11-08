@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GVS tilt control</title>
+<style>
+  :root { --bg:#f7f4ee; --ink:#1d1b18; --muted:#6b665e; --track:#e2ddd3; --hot:#c8463c; --cool:#2f6fd6; --ok:#2e7d4f; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#16140f; --ink:#f1ece2; --muted:#a39d92; --track:#2c2922; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.4 -apple-system, Helvetica, Arial, sans-serif; padding:24px 16px; }
+  main { max-width:760px; margin:0 auto; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 20px; }
+  #pad { position:relative; height:180px; border-radius:14px; background:var(--track); touch-action:none; user-select:none; cursor:grab; overflow:hidden; }
+  #pad.armed { outline:3px solid var(--hot); }
+  #fill { position:absolute; top:0; bottom:0; left:50%; width:0; background:var(--hot); opacity:.8; }
+  #mid { position:absolute; top:0; bottom:0; left:50%; width:2px; background:var(--ink); opacity:.5; }
+  .lab { position:absolute; top:12px; font-weight:600; color:var(--muted); }
+  #big { font-size:40px; font-weight:700; margin:14px 0 4px; font-variant-numeric:tabular-nums; }
+  .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin:12px 0; }
+  button { font:inherit; padding:12px 18px; border-radius:10px; border:0; cursor:pointer; }
+  #arm { background:var(--ok); color:#fff; }
+  #stop { background:var(--hot); color:#fff; font-weight:700; font-size:20px; padding:16px 28px; }
+  #status, #msg { color:var(--muted); font-variant-numeric:tabular-nums; }
+  label { display:flex; gap:8px; align-items:center; }
+  input[type=range] { width:180px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>GVS tilt control</h1>
+  <p class="sub">Press <b>Arm</b>, then hold and drag on the bar: left tilts left, right tilts right, how far = how strong. Let go = 0. <b>Space</b> or the red button stops everything. Arrow keys work too.</p>
+
+  <div class="row">
+    <button id="arm">Arm</button>
+    <button id="stop">STOP</button>
+    <label>max <input id="max" type="range" min="0.25" max="2.0" step="0.05" value="1.0"> <span id="maxv">1.00</span> mA</label>
+    <label><input id="inv" type="checkbox"> mirror (if the tilt comes out backwards)</label>
+  </div>
+  <div class="row">
+    <button id="nausea" style="background:#7b4bb7;color:#fff">Nausea (rock 60 s)</button>
+    <label>speed <select id="hz"><option value="0.1">0.1 Hz (10 s per rock, slowest)</option><option value="0.2" selected>0.2 Hz</option><option value="0.5">0.5 Hz</option></select></label>
+    <span class="sub" style="margin:0">Slow side-to-side rocking at the max slider's current. Seated only. STOP / Space ends it.</span>
+  </div>
+
+  <div id="pad"><div id="fill"></div><div id="mid"></div>
+    <span class="lab" style="left:14px">◀ LEFT</span><span class="lab" style="right:14px">RIGHT ▶</span></div>
+  <div id="big">OFF</div>
+  <div id="status">board: …</div>
+  <div id="msg"></div>
+</main>
+<script>
+const TICK_MS = 66;                 // ~15 updates/s; the board ramps off if updates stop for 0.5 s
+const $ = id => document.getElementById(id);
+let armed = false, x = 0, keyX = 0, wasLive = false, sending = false;
+let prog = null;                    // nausea program: {t0, hz}; zero-mean sine, 5 s fade-in; the board ends it at 60 s
+
+const maxMa = () => parseFloat($("max").value);
+$("max").oninput = () => $("maxv").textContent = maxMa().toFixed(2);
+
+function progV() {
+  if (!prog) return 0;
+  const t = (performance.now() - prog.t0) / 1000;
+  return Math.min(1, t / 5) * Math.sin(2 * Math.PI * prog.hz * t);
+}
+
+function target() {
+  const v = prog ? progV() : (keyX || x);    // -1..1, left negative
+  const sign = $("inv").checked ? 1 : -1;    // left -> +mA -> relay 1 -> left electrode anode -> lean left
+  return Math.round(sign * v * maxMa() * 1000) / 1000;
+}
+
+function draw() {
+  const v = prog ? progV() : (keyX || x), fill = $("fill");
+  fill.style.width = Math.abs(v) * 50 + "%";
+  fill.style.left = v < 0 ? (50 - Math.abs(v) * 50) + "%" : "50%";
+  const ma = target();
+  const tag = prog ? `NAUSEA ${Math.floor((performance.now() - prog.t0) / 1000)} s · ` : "";
+  $("big").textContent = armed ? `${tag}${(Math.abs(ma)).toFixed(2)} mA ${v < 0 ? "← left" : v > 0 ? "right →" : ""}` : "OFF";
+  $("pad").classList.toggle("armed", armed);
+}
+
+async function stopAll(why) {
+  prog = null;
+  armed = false; x = 0; keyX = 0; wasLive = false; draw();
+  $("msg").textContent = why;
+  try { await fetch("/cmd?line=stop"); } catch (e) { $("msg").textContent = why + " (stop request failed: " + e + ")"; }
+}
+
+$("nausea").onclick = () => {
+  armed = true; wasLive = false; x = 0; keyX = 0;
+  prog = { t0: performance.now(), hz: parseFloat($("hz").value) };
+  $("msg").textContent = `nausea: rocking ±${maxMa().toFixed(2)} mA at ${prog.hz} Hz for up to 60 s`;
+};
+setInterval(() => { if (prog) draw(); }, 100);
+
+$("arm").onclick = () => { prog = null; armed = true; wasLive = false; $("msg").textContent = "armed: drag on the bar"; draw(); };
+$("stop").onclick = () => stopAll("stopped");
+window.addEventListener("keydown", e => {
+  if (e.code === "Space" || e.code === "Escape") { e.preventDefault(); stopAll("stopped (key)"); }
+  if (e.code === "ArrowLeft") keyX = -1;
+  if (e.code === "ArrowRight") keyX = 1;
+  draw();
+});
+window.addEventListener("keyup", e => { if (e.code === "ArrowLeft" || e.code === "ArrowRight") { keyX = 0; draw(); } });
+window.addEventListener("blur", () => { x = 0; keyX = 0; draw(); });
+
+const pad = $("pad");
+function setFromEvent(e) {
+  const r = pad.getBoundingClientRect();
+  x = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width) * 2 - 1));
+  draw();
+}
+pad.addEventListener("pointerdown", e => { pad.setPointerCapture(e.pointerId); setFromEvent(e); });
+pad.addEventListener("pointermove", e => { if (pad.hasPointerCapture(e.pointerId)) setFromEvent(e); });
+const release = () => { x = 0; draw(); };
+pad.addEventListener("pointerup", release);
+pad.addEventListener("pointercancel", release);
+
+setInterval(async () => {                    // live updates; skipped if the previous one hasn't returned
+  if (!armed || sending) return;
+  sending = true;
+  try {
+    const r = await (await fetch(`/live?ma=${target()}`)).text();
+    if (r.startsWith("403") || r.startsWith("503")) { prog = null; armed = false; draw(); $("msg").textContent = r; }
+  } catch (e) { $("msg").textContent = "send failed: " + e; }
+  sending = false;
+}, TICK_MS);
+
+setInterval(async () => {                    // board status every 2 s; disarm when a session ends
+  try {
+    const s = await (await fetch("/cmd?line=status")).json();
+    $("status").textContent = `board: ${s.mode}  level ${s.live_level} mA  hv ${s.hv} V  live budget ${Math.floor(s.live_budget_ms / 1000)} s  fault ${s.fault}`;
+    if (s.mode === "live") wasLive = true;
+    else if (armed && wasLive && s.mode === "idle") { prog = null; armed = false; wasLive = false; draw(); $("msg").textContent = "session ended: " + (s.msg || "idle") + " — press Arm to start again"; }
+    if (armed && s.live_budget_ms === 0) { prog = null; armed = false; draw(); $("msg").textContent = "live budget for this hour is used up (10 min with current flowing). The board refuses until it frees up."; }
+    if (s.fault) { prog = null; armed = false; draw(); $("msg").textContent = "FAULT: " + s.msg; }
+  } catch (e) { $("status").textContent = "board: unreachable (" + e + ")"; }
+}, 2000);
+draw();
+</script>
+</body>
+</html>

@@ -3,7 +3,8 @@
 Run it in macOS Terminal.app (which can be granted Bluetooth permission):
   ~/source/repos/makeuc-2026/pipeline/.venv/bin/python ~/source/repos/makeuc-2026/gvs/tools/ble_bridge.py
 
-Then, from anywhere on this Mac:
+Open http://127.0.0.1:8765/ for the tilt-control page (gvs/tools/live.html).
+Or, from anywhere on this Mac:
   curl 'http://127.0.0.1:8765/cmd?line=status'
   curl 'http://127.0.0.1:8765/cmd?line=pulse%200.5%202000%201%200%20sine'
 
@@ -47,8 +48,37 @@ async def ensure_client() -> BleakClient:
     return c
 
 
+LIVE_MAX_MA = 2.0  # firmware LIVE_MAX_MA; the bridge clamps too
+
+
+def mains_risk() -> str | None:
+    """Refuse current while this Mac is on its charger AND the board is on its USB: that ties the
+    electrodes to wall power. Bluetooth alone is isolated, so the charger by itself is fine."""
+    import glob
+    import subprocess
+    try:
+        ac = "AC Power" in subprocess.run(["pmset", "-g", "batt"], capture_output=True, text=True, timeout=3).stdout
+    except Exception:
+        ac = True  # can't tell: assume the worst
+    usb = bool(glob.glob("/dev/cu.usbmodem*"))
+    return "403 refused: Mac is on its charger and the board is on USB. Unplug one." if ac and usb else None
+
+
+async def live(ma: float, tok: str) -> str:
+    """Fire-and-forget live update: write without response, no reply read, so ~15 Hz is easy."""
+    if (why := mains_risk()) and ma != 0:
+        return why
+    ma = max(-LIVE_MAX_MA, min(LIVE_MAX_MA, ma))
+    async with state["lock"]:
+        c = await ensure_client()
+        await c.write_gatt_char(CMD, f"{tok} live {ma:.3f}".encode(), response=False)
+    return f"sent live {ma:.3f}"
+
+
 async def run(line: str, tok: str) -> str:
     words = line.split()
+    if words and words[0] in ("pulse", "live", "boost") and (why := mains_risk()):
+        return why
     if words and words[0] == "pulse" and "dc" in words[1:]:
         try:
             if float(words[1]) > DC_MAX_MA:
@@ -78,7 +108,24 @@ def main() -> int:
     class H(BaseHTTPRequestHandler):
         def do_GET(self):
             u = urllib.parse.urlsplit(self.path)
-            line = urllib.parse.parse_qs(u.query).get("line", [""])[0]
+            if u.path in ("/", "/live.html"):
+                body = (Path(__file__).resolve().parent / "live.html").read_bytes()
+                self.send_response(200); self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Cache-Control", "no-store"); self.end_headers()
+                self.wfile.write(body)
+                return
+            q = urllib.parse.parse_qs(u.query)
+            line = q.get("line", [""])[0]
+            if u.path == "/live" and "ma" in q:
+                try:
+                    r = asyncio.run_coroutine_threadsafe(live(float(q["ma"][0]), tok), loop).result(5)
+                    code = 200
+                except Exception as e:
+                    state["client"] = None
+                    r, code = f"503 bridge: {e}", 503
+                self.send_response(code); self.send_header("Content-Type", "text/plain"); self.end_headers()
+                self.wfile.write((r + "\n").encode())
+                return
             if u.path != "/cmd" or not line:
                 self.send_response(404); self.end_headers(); return
             try:

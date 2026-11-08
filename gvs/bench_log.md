@@ -64,3 +64,22 @@ Pads were placed on the mastoids. The kill switch had been removed; the plan was
   - With no SSID, WiFi stays off and the HTTP server isn't started. The first build crashed in `xQueueSemaphoreTake` because `WebServer` touched lwIP while WiFi was off.
   - Boot now prints `WiFi off (no SSID)` and `BLE: GVS-zapper advertising`, and status works over BLE.
 - **Battery:** went below about 3.0 V. Check it for swelling or heat while it recharges.
+
+## 2026-11-08, live mode (browser tilt control)
+
+- **Firmware:** `live <signed mA>` streams a target current. The board slews toward it at up to 4 mA/s, with the sign choosing the relay.
+- **Limits:**
+  - dead-man: 500 ms with no update ramps the output to 0 and ends the session
+  - 60 s per session
+  - 10 min of live time per rolling hour
+  - |target| ≤ 1.5 mA
+- **Checked over USB serial** at 0.3 mA, open leads or pads (not checked by meter):
+  - streaming +0.3 holds 0.3 mA on relay 1
+  - going silent reaches idle at 0.51 s, msg "live: controller silent, ramped off"
+  - −0.3 mA moves to relay 2
+  - −9 mA is clamped to −1.5
+  - stop goes to idle
+- **Relay (`ble_bridge.py`):**
+  - Serves `live.html` at http://127.0.0.1:8765/; `/live?ma=` writes over BLE without waiting for a response.
+  - Refuses any current (pulse, live, boost) while the Mac is on its charger **and** the board is on USB. Checked: `403 refused` for both /live and /cmd pulse while on AC with USB in.
+- **A miss:** the serial checks above ran without that check, while the Mac was on AC with USB in.
