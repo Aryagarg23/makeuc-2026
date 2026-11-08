@@ -19,13 +19,19 @@
 //   /status
 //   /boost?pct=12   bench tuning: holds the boost on at N% (clamped to BOOST_MAX_PCT)
 //   /boost?pct=0    ends tuning (boost goes back to pulse-only)
-// USB serial (115200): the same commands for the bench, see handleSerial().
+// USB serial (115200) and BLE ("GVS-zapper", token-prefixed): the same commands, see runCommand().
 // A fault latches until power cycle.
 
 #include <WiFi.h>
 #include <WebServer.h>
 #include <ESPmDNS.h>
 #include <esp_task_wdt.h>
+#include <BLEDevice.h>
+#include <BLEServer.h>
+
+const char* BLE_SVC_UUID  = "6e7a0001-9c1b-4e5a-8f3d-67a5c0de0001";
+const char* BLE_CMD_UUID  = "6e7a0002-9c1b-4e5a-8f3d-67a5c0de0001";
+const char* BLE_RESP_UUID = "6e7a0003-9c1b-4e5a-8f3d-67a5c0de0001";
 
 // ---------- config ----------
 // WIFI_SSID, WIFI_PASS, TOKEN, AP_PASS live in secrets.h (git-ignored; copy secrets.example.h).
@@ -296,29 +302,83 @@ void handleStatus() {
 //   status | stop | boost <pct> | boostpct <pct> | pulse <ma> <ms> <hz> <pol> <sine|dc>
 // boostpct sets BOOST_PCT in RAM until reset (put the tuned value in the source to keep it).
 // Never run pulses over USB while electrodes are on a person and the Mac is on its charger.
+// One command line -> one reply line (status replies with the JSON). Shared by USB serial and BLE.
+String runCommand(String line) {
+  line.trim();
+  String msg; int code = 400;
+  char cmd[12] = {0}, md[8] = "sine"; float a = 0, hz = 1.0f; long ms = 0; int pol = 0;
+  int n = sscanf(line.c_str(), "%11s %f %ld %f %d %7s", cmd, &a, &ms, &hz, &pol, md);
+  String k(cmd);
+  if (k == "status") { String j = statusJson(); j.trim(); return j; }
+  else if (k == "stop") { outputOff(); code = 200; msg = "stopped"; }
+  else if (k == "boost" && n >= 2) code = setBoost(a, msg);
+  else if (k == "boostpct" && n >= 2) {
+    if (mode != IDLE || boostTuning) { code = 409; msg = "busy"; }
+    else { BOOST_PCT = constrain(a, 0.0f, BOOST_MAX_PCT); code = 200; msg = "BOOST_PCT " + String(BOOST_PCT, 1); }
+  }
+  else if (k == "pulse" && n >= 3) code = startPulse(a, ms, n >= 4 ? hz : 1.0f, n >= 5 ? pol : 0, String(md) == "dc", msg);
+  else msg = "status | stop | boost <pct> | boostpct <pct> | pulse <ma> <ms> <hz> <pol> <sine|dc>";
+  return String(code) + " " + msg;
+}
+
 void handleSerial() {
   static String line;
   while (Serial.available()) {
     char c = Serial.read();
     if (c != '\n') { if (line.length() < 64) line += c; continue; }
     line.trim();
-    String msg; int code = 400;
-    char cmd[12] = {0}, md[8] = "sine"; float a = 0, hz = 1.0f; long ms = 0; int pol = 0;
-    int n = sscanf(line.c_str(), "%11s %f %ld %f %d %7s", cmd, &a, &ms, &hz, &pol, md);
-    String k(cmd);
-    if (k == "status") { Serial.print(statusJson()); line = ""; continue; }
-    else if (k == "stop") { outputOff(); code = 200; msg = "stopped"; }
-    else if (k == "boost" && n >= 2) code = setBoost(a, msg);
-    else if (k == "boostpct" && n >= 2) {
-      if (mode != IDLE || boostTuning) { code = 409; msg = "busy"; }
-      else { BOOST_PCT = constrain(a, 0.0f, BOOST_MAX_PCT); code = 200; msg = "BOOST_PCT " + String(BOOST_PCT, 1); }
-    }
-    else if (k == "pulse" && n >= 3) code = startPulse(a, ms, n >= 4 ? hz : 1.0f, n >= 5 ? pol : 0, String(md) == "dc", msg);
-    else if (line.length()) msg = "status | stop | boost <pct> | boostpct <pct> | pulse <ma> <ms> <hz> <pol> <sine|dc>";
-    else { line = ""; continue; }
-    Serial.println(String(code) + " " + msg);
+    if (line.length()) Serial.println(runCommand(line));
     line = "";
   }
+}
+
+// ---------- BLE ----------
+// Write "<TOKEN> <command>" to CMD (write with response); read the reply from RESP.
+// The BLE link is unpaired and unencrypted: the token keeps strangers out, it is not secret from a sniffer.
+BLECharacteristic* bleResp = nullptr;
+portMUX_TYPE bleMux = portMUX_INITIALIZER_UNLOCKED;
+String blePending; volatile bool bleHas = false;
+
+class CmdCB : public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic* c) override {
+    String v = String(c->getValue().c_str());
+    portENTER_CRITICAL(&bleMux);
+    if (!bleHas) { blePending = v; bleHas = true; }   // one command at a time; the loop runs it
+    portEXIT_CRITICAL(&bleMux);
+  }
+};
+
+class ConnCB : public BLEServerCallbacks {
+  void onDisconnect(BLEServer* s) override { BLEDevice::startAdvertising(); }
+};
+
+void bleSetup() {
+  BLEDevice::init("GVS-zapper");
+  BLEServer* srv = BLEDevice::createServer();
+  srv->setCallbacks(new ConnCB());
+  BLEService* svc = srv->createService(BLE_SVC_UUID);
+  BLECharacteristic* cmd = svc->createCharacteristic(BLE_CMD_UUID, BLECharacteristic::PROPERTY_WRITE);
+  cmd->setCallbacks(new CmdCB());
+  bleResp = svc->createCharacteristic(BLE_RESP_UUID, BLECharacteristic::PROPERTY_READ);
+  bleResp->setValue("ready");
+  svc->start();
+  BLEAdvertising* adv = BLEDevice::getAdvertising();
+  adv->addServiceUUID(BLE_SVC_UUID);
+  adv->setScanResponse(true);
+  BLEDevice::startAdvertising();
+}
+
+void handleBle() {
+  if (!bleHas) return;
+  portENTER_CRITICAL(&bleMux);
+  String line = blePending; bleHas = false;
+  portEXIT_CRITICAL(&bleMux);
+  line.trim();
+  int sp = line.indexOf(' ');
+  String reply;
+  if (sp < 0 || line.substring(0, sp) != TOKEN) reply = "403 bad token";
+  else reply = runCommand(line.substring(sp + 1));
+  bleResp->setValue(reply.c_str());
 }
 
 void handleBoost() {
@@ -359,6 +419,8 @@ void setup() {
   server.on("/status", handleStatus);
   server.on("/boost",  handleBoost);
   server.begin();
+  bleSetup();
+  Serial.println("BLE: GVS-zapper advertising");
 
   // watchdog: a hung loop resets the chip, which releases both relays
 #if ESP_ARDUINO_VERSION_MAJOR >= 3
@@ -374,6 +436,7 @@ void loop() {
   esp_task_wdt_reset();
   server.handleClient();
   handleSerial();
+  handleBle();
 
   static int hvHigh = 0;             // 3 readings in a row, so one noisy sample can't trip it
   float hv = hvVolts();
