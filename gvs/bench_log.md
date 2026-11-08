@@ -53,3 +53,14 @@ Pads were placed on the mastoids. The kill switch had been removed; the plan was
   - Check gel-to-gel resistance first: under about 1 kΩ, steady when the pins are wiggled.
   - During a 1.0 mA pulse, check that the voltage across the pads is 1–5 V.
   - Restart at 0.5 mA.
+
+## 2026-11-08, battery flat overnight
+
+- **Symptom:** Bluetooth not found.
+- **On USB:** idle HV rail 2.48 V (3.75–3.88 V the night before), pulse log cleared, so the board had browned out and reset.
+- **Charging over USB:** 2.82 → 3.11 V in 53 s.
+- **Cause:** with no SSID, the firmware fell back to an always-on WiFi hotspot alongside BLE, and the 250 mAh LiPo couldn't sustain it overnight.
+- **Fix:**
+  - With no SSID, WiFi stays off and the HTTP server isn't started. The first build crashed in `xQueueSemaphoreTake` because `WebServer` touched lwIP while WiFi was off.
+  - Boot now prints `WiFi off (no SSID)` and `BLE: GVS-zapper advertising`, and status works over BLE.
+- **Battery:** went below about 3.0 V. Check it for swelling or heat while it recharges.

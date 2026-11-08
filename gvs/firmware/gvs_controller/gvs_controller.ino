@@ -71,6 +71,7 @@ const uint32_t OVER_TRIP_MS = 50;
 
 // ---------- state ----------
 WebServer server(80);
+bool wifiOn = false;               // HTTP API only exists when WiFi is up; with WiFi off lwIP isn't started
 enum Mode { IDLE, DC, SINE };
 Mode     mode = IDLE;
 float    targetMa = 0, freqHz = 1.0f, commandedMa = 0;
@@ -400,25 +401,35 @@ void setup() {
   if (!pwmOk || !boostOk) kill(String("ledc attach failed:") + (pwmOk ? "" : " SET") + (boostOk ? "" : " BOOST"));
   analogReadResolution(12);
 
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
-  uint32_t t0 = millis();
-  while (WiFi.status() != WL_CONNECTED && millis() - t0 < 10000) { delay(300); Serial.print("."); }
-  if (WiFi.status() == WL_CONNECTED) {
-    Serial.printf("\nGVS ready at http://%s/  (gvs.local)\n", WiFi.localIP().toString().c_str());
+  // No SSID configured: WiFi stays off and BLE is the only link. The always-on hotspot this used to
+  // start flattened the 250 mAh LiPo overnight (bench_log.md, 2026-11-08). Set WIFI_SSID to use HTTP.
+  if (strlen(WIFI_SSID) == 0) {
+    WiFi.mode(WIFI_OFF);
+    Serial.println("WiFi off (no SSID). Control over BLE or USB serial.");
   } else {
-    // no known WiFi: make our own hotspot so testing never depends on venue WiFi
-    WiFi.mode(WIFI_AP);
-    WiFi.softAP("GVS-zapper", AP_PASS);
-    Serial.printf("\nNo WiFi. Join hotspot GVS-zapper (password in secrets.h), then http://%s/\n", WiFi.softAPIP().toString().c_str());
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(WIFI_SSID, WIFI_PASS);
+    uint32_t t0 = millis();
+    while (WiFi.status() != WL_CONNECTED && millis() - t0 < 10000) { delay(300); Serial.print("."); }
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.printf("\nGVS ready at http://%s/  (gvs.local)\n", WiFi.localIP().toString().c_str());
+    } else {
+      // configured WiFi not reachable: own hotspot so testing never depends on venue WiFi
+      WiFi.mode(WIFI_AP);
+      WiFi.softAP("GVS-zapper", AP_PASS);
+      Serial.printf("\nNo WiFi. Join hotspot GVS-zapper (password in secrets.h), then http://%s/\n", WiFi.softAPIP().toString().c_str());
+    }
+    MDNS.begin("gvs");
+    wifiOn = true;
   }
-  MDNS.begin("gvs");
 
-  server.on("/pulse",  handlePulse);
-  server.on("/stop",   handleStop);
-  server.on("/status", handleStatus);
-  server.on("/boost",  handleBoost);
-  server.begin();
+  if (wifiOn) {
+    server.on("/pulse",  handlePulse);
+    server.on("/stop",   handleStop);
+    server.on("/status", handleStatus);
+    server.on("/boost",  handleBoost);
+    server.begin();
+  }
   bleSetup();
   Serial.println("BLE: GVS-zapper advertising");
 
@@ -434,7 +445,7 @@ void setup() {
 
 void loop() {
   esp_task_wdt_reset();
-  server.handleClient();
+  if (wifiOn) server.handleClient();
   handleSerial();
   handleBle();
 
